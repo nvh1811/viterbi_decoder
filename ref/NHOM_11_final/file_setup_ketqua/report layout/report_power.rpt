@@ -1,0 +1,409 @@
+
+Power Net Detected:
+        Voltage	    Name
+             0V	    VSS
+          1.62V	    VDD
+Using Power View: wc.
+AAE_INFO: opIsDesignInPostRouteState() is 1
+AAE DB initialization (MEM=3078.730469 CPU=0:00:00.0 REAL=0:00:00.0) 
+AAE_INFO: resetNetProps viewIdx 0 
+Starting SI iteration 1 using Infinite Timing Windows
+#################################################################################
+# Design Stage: PostRoute
+# Design Name: viterbi_top
+# Design Mode: 90nm
+# Analysis Mode: MMMC OCV 
+# Parasitics Mode: No SPEF/RCDB 
+# Signoff Settings: SI On 
+#################################################################################
+#WARNING (NRIF-95) Option set_db route_top_routing_layer has invalid value "0". Reset to max routing layer "5".
+#Extract in post route mode
+#Finish check_net_pin_list step Enter extract_rc_in_nr_cmd
+#Fast data preparation for tQuantus.
+#WARNING (NRIF-95) Option set_db route_top_routing_layer has invalid value "0". Reset to max routing layer "5".
+#Start routing data preparation on Sat May 30 05:49:11 2026
+#
+#WARNING (NRIF-95) Option set_db route_top_routing_layer has invalid value "0". Reset to max routing layer "5".
+#WARNING (NRIF-95) Option set_db route_top_routing_layer has invalid value "0". Reset to max routing layer "5".
+# met1         H   Track-Pitch = 0.4600    Line-2-Via Pitch = 0.3400
+# met2         V   Track-Pitch = 0.4600    Line-2-Via Pitch = 0.3400
+# met3         H   Track-Pitch = 0.6100    Line-2-Via Pitch = 0.6100
+# met4         V   Track-Pitch = 0.6150    Line-2-Via Pitch = 0.6150
+# met5         H   Track-Pitch = 3.6600    Line-2-Via Pitch = 3.2000
+#Regenerating Ggrids automatically.
+#Auto generating G-grids with size=15 tracks, using layer met3's pitch = 0.6150.
+#Using automatically generated G-grids.
+#Done routing data preparation.
+#cpu time = 00:00:00, elapsed time = 00:00:00, memory = 3063.29 (MB), peak = 3191.91 (MB)
+#WARNING (NRIF-95) Option set_db route_top_routing_layer has invalid value "0". Reset to max routing layer "5".
+#Start routing data preparation on Sat May 30 05:49:11 2026
+#
+#WARNING (NRIF-95) Option set_db route_top_routing_layer has invalid value "0". Reset to max routing layer "5".
+#WARNING (NRIF-95) Option set_db route_top_routing_layer has invalid value "0". Reset to max routing layer "5".
+#shield_layer  1: layer_id= 4 shield_wire_on_grid=1 shield_via_on_grid=1 is_hard_wire_on_grid=0 allow_ww=0
+#shield_layer  2: layer_id= 6 shield_wire_on_grid=1 shield_via_on_grid=1 is_hard_wire_on_grid=0 allow_ww=0
+#shield_layer  3: layer_id= 8 shield_wire_on_grid=1 shield_via_on_grid=1 is_hard_wire_on_grid=0 allow_ww=0
+#shield_layer  4: layer_id=10 shield_wire_on_grid=1 shield_via_on_grid=1 is_hard_wire_on_grid=0 allow_ww=0
+#shield_layer  5: layer_id=12 shield_wire_on_grid=1 shield_via_on_grid=1 is_hard_wire_on_grid=0 allow_ww=0
+#Bottom routing layer index=1(met1), bottom routing layer for shielding=1(met1), bottom shield layer=1(met1) top shield layer=5(met5)
+#shield_bottom_stripe_layer=1(met1), shield_top_stripe_layer=5(met5)
+#pin_access_rlayer=2(met2) num_routing_layer=5 top_routing_layer=5 top_ripin_layer=5
+#shield_top_dpt_rlayer=-1 top_rlayer=5 top_trim_metal_rlayer=-1 rlayer_lowest=1 bottom_rlayer=1
+#enable_trim_layer_shield=F enable_dpt_layer_shield=F has_line_end_grid=F
+#Regenerating Ggrids automatically.
+#Auto generating G-grids with size=15 tracks, using layer met3's pitch = 0.6150.
+#Using automatically generated G-grids.
+#Done routing data preparation.
+#cpu time = 00:00:00, elapsed time = 00:00:00, memory = 3076.91 (MB), peak = 3191.91 (MB)
+#
+#Start tQuantus RC extraction...
+#Start building rc corner(s)...
+#Number of RC Corner = 1
+#Corner rccorners /home/iclab11/Desktop/viterbi_last/qrc/qrcTechFile_RCgen 25.000000 (real) 
+#(i=5, n=5 1000)
+#metal1 -> met1 (1)
+#metal2 -> met2 (2)
+#metal3 -> met3 (3)
+#metal4 -> met4 (4)
+#metal5 -> met5 (5)
+#SADV-On
+# Corner(s) : 
+#rccorners [25.00]
+# Corner id: 0
+# Layout Scale: 1.000000
+# Has Metal Fill model: yes
+# Temperature was set
+# Temperature : 25.000000
+# Ref. Temp   : 25.000000
+#SADV-Off
+#
+#layer[5] tech width 1600 != ict width 800.0
+#
+#layer[5] tech spc 1600 != ict spc 800.0
+#total pattern=35 [5, 90]
+#Reading previously stored rc_model file ( rc_model.bin ) ...
+#found CAPMODEL /home/iclab11/Desktop/viterbi_last/qrc/qrcTechFile_RCgen
+#found RESMODEL /home/iclab11/Desktop/viterbi_last/qrc/qrcTechFile_RCgen 25.000000 
+#CCE Version read = IQuantus/TQuantus 23.1.1-s583
+#number model r/c [1,1] [5,90] read
+#0 rcmodel(s) requires rebuild
+#Build RC corners: cpu time = 00:00:00, elapsed time = 00:00:00, memory = 3078.09 (MB), peak = 3191.91 (MB)
+#Finish check_net_pin_list step Enter extract
+#Start init net ripin tree building
+#Finish init net ripin tree building
+#Cpu time = 00:00:00
+#Elapsed time = 00:00:00
+#Increased memory = 0.00 (MB)
+#Total memory = 3078.09 (MB)
+#Peak memory = 3191.91 (MB)
+#begin processing metal fill model file
+#end processing metal fill model file
+#WARNING (NRIF-95) Option set_db route_top_routing_layer has invalid value "0". Reset to max routing layer "5".
+#Length limit = 200 pitches
+#opt mode = 2
+#Finish check_net_pin_list step Fix net pin list
+#Start generate extraction boxes.
+#
+#Extract using 30 x 30 Hboxes
+#2x2 initial hboxes
+#Use area based hbox pruning.
+#0/0 hboxes pruned.
+#Complete generating extraction boxes.
+#Start step Extraction
+#Extract 1 hboxes with single thread on machine with  Xeon 2.30GHz 40960KB Cache 32CPU...
+#Process 0 special clock nets for rc extraction
+#Total 541 nets were built. 0 nodes added to break long wires. 0 net(s) have incomplete routes.
+#Start inst blockage merging.
+#Run Statistics for Extraction:
+#   Cpu time = 00:00:00, elapsed time = 00:00:00 .
+#   Increased memory =     4.95 (MB), total memory =  3083.03 (MB), peak memory =  3191.91 (MB)
+#Register nets and terms for rcdb /home/iclab11/Desktop/viterbi_last/physical_design/innovus_temp_886205_33e2aa6e-ebd5-4d3a-a6da-5c37f359641c_iclab_iclab11_A3Qi48/nr886205_qHIKCU.rcdb.d
+#Finish registering nets and terms for rcdb.
+#Simplify RC tree: cpu time = 00:00:00, elapsed time = 00:00:00, memory = 3089.29 (MB), peak = 3191.91 (MB)
+#WARNING (NRIF-95) Option set_db route_top_routing_layer has invalid value "0". Reset to max routing layer "5".
+#RC Statistics: 2449 Res, 1147 Ground Cap, 236 XCap (Edge to Edge)
+#WARNING (NREX-102) Net u_pmsm/UNCONNECTED9 is not extracted due to Has no routing. The result of timing analysis involving such net is inaccurate.
+#WARNING (NREX-102) Net u_sym_ext/UNCONNECTED64 is not extracted due to Has no routing. The result of timing analysis involving such net is inaccurate.
+#WARNING (NREX-102) Net u_sym_ext/UNCONNECTED61 is not extracted due to Has no routing. The result of timing analysis involving such net is inaccurate.
+#WARNING (NREX-102) Net u_sym_ext/UNCONNECTED63 is not extracted due to Has no routing. The result of timing analysis involving such net is inaccurate.
+#WARNING (NREX-102) Net u_sym_ext/UNCONNECTED65 is not extracted due to Has no routing. The result of timing analysis involving such net is inaccurate.
+#WARNING (NREX-102) Net u_sym_ext/UNCONNECTED62 is not extracted due to Has no routing. The result of timing analysis involving such net is inaccurate.
+#WARNING (NREX-102) Net u_sym_ext/UNCONNECTED66 is not extracted due to Has no routing. The result of timing analysis involving such net is inaccurate.
+#WARNING (NREX-102) Net u_sym_ext/UNCONNECTED67 is not extracted due to Has no routing. The result of timing analysis involving such net is inaccurate.
+#WARNING (NREX-102) Net u_pmsm/UNCONNECTED0 is not extracted due to Has no routing. The result of timing analysis involving such net is inaccurate.
+#WARNING (NREX-102) Net u_pmsm/UNCONNECTED13 is not extracted due to Has no routing. The result of timing analysis involving such net is inaccurate.
+#WARNING (NREX-102) Net u_pmsm/UNCONNECTED3 is not extracted due to Has no routing. The result of timing analysis involving such net is inaccurate.
+#WARNING (NREX-102) Net u_pmsm/UNCONNECTED2 is not extracted due to Has no routing. The result of timing analysis involving such net is inaccurate.
+#WARNING (NREX-102) Net u_pmsm/UNCONNECTED8 is not extracted due to Has no routing. The result of timing analysis involving such net is inaccurate.
+#WARNING (NREX-102) Net u_pmsm/UNCONNECTED15 is not extracted due to Has no routing. The result of timing analysis involving such net is inaccurate.
+#WARNING (NREX-102) Net u_pmsm/UNCONNECTED7 is not extracted due to Has no routing. The result of timing analysis involving such net is inaccurate.
+#WARNING (NREX-102) Net u_pmsm/UNCONNECTED14 is not extracted due to Has no routing. The result of timing analysis involving such net is inaccurate.
+#WARNING (NREX-102) Net u_pmsm/UNCONNECTED4 is not extracted due to Has no routing. The result of timing analysis involving such net is inaccurate.
+#WARNING (NREX-102) Net u_pmsm/UNCONNECTED10 is not extracted due to Has no routing. The result of timing analysis involving such net is inaccurate.
+#WARNING (NREX-102) Net u_pmsm/UNCONNECTED16 is not extracted due to Has no routing. The result of timing analysis involving such net is inaccurate.
+#WARNING (NREX-102) Net u_pmsm/UNCONNECTED17 is not extracted due to Has no routing. The result of timing analysis involving such net is inaccurate.
+#WARNING (EMS-27) Message (NREX-102) has exceeded the current message display limit of 20.
+#To increase the message display limit, refer to the product command reference manual.
+#RC V/H edge ratio: 0.20, Avg V/H Edge Length: 1403.01 (1180), Avg L-Edge Length: 7268.59 (940)
+#Nets and terms are pre-registered for rcdb /home/iclab11/Desktop/viterbi_last/physical_design/innovus_temp_886205_33e2aa6e-ebd5-4d3a-a6da-5c37f359641c_iclab_iclab11_A3Qi48/nr886205_qHIKCU.rcdb.d.
+#Start writing RC data.
+#Finish writing RC data
+#Finish writing rcdb with 3020 nodes, 2479 edges, and 492 xcaps
+#cpu time = 00:00:00, elapsed time = 00:00:00, memory = 3082.50 (MB), peak = 3191.91 (MB)
+Restoring parasitic data from file '/home/iclab11/Desktop/viterbi_last/physical_design/innovus_temp_886205_33e2aa6e-ebd5-4d3a-a6da-5c37f359641c_iclab_iclab11_A3Qi48/nr886205_qHIKCU.rcdb.d' ...
+Reading RCDB with compressed RC data.
+Reading RCDB with compressed RC data.
+Begin read_parasitics... (cpu: 0:00:00.0 real: 0:00:00.0 mem: 3641.664M)
+Following multi-corner parasitics specified:
+	/home/iclab11/Desktop/viterbi_last/physical_design/innovus_temp_886205_33e2aa6e-ebd5-4d3a-a6da-5c37f359641c_iclab_iclab11_A3Qi48/nr886205_qHIKCU.rcdb.d (rcdb)
+Reading RCDB with compressed RC data.
+		Cell viterbi_top has rcdb /home/iclab11/Desktop/viterbi_last/physical_design/innovus_temp_886205_33e2aa6e-ebd5-4d3a-a6da-5c37f359641c_iclab_iclab11_A3Qi48/nr886205_qHIKCU.rcdb.d specified
+Cell viterbi_top, hinst 
+Reading RCDB with compressed RC data.
+Done read_parasitics... (cpu: 0:00:00.1 real: 0:00:00.0 mem: 3641.664M)
+#
+#Restore RCDB.
+#
+#Complete tQuantus RC extraction.
+#Cpu time = 00:00:01
+#Elapsed time = 00:00:01
+#Increased memory = 5.59 (MB)
+#Total memory = 3082.51 (MB)
+#Peak memory = 3191.91 (MB)
+#
+#0 inserted nodes are removed
+#Restored 0 tie nets, 0 tie snets, 0 partial nets
+#Start Design Signature (0)
+#Finish Inst Signature in MT(53642672)
+#Finish Net Signature in MT(99520069)
+#Finish SNet Signature in MT (134917277)
+#Run time and memory report for RC extraction:
+#RC extraction running on  Xeon 2.30GHz 40960KB Cache 32CPU.
+#Run Statistics for snet signature:
+#   Cpu time = 00:00:00, elapsed time = 00:00:00 .
+#   Increased memory =     0.00 (MB), total memory =  3069.82 (MB), peak memory =  3191.91 (MB)
+#Run Statistics for Net Final Signature:
+#   Cpu time = 00:00:00, elapsed time = 00:00:00 .
+#   Increased memory =     0.00 (MB), total memory =  3069.82 (MB), peak memory =  3191.91 (MB)
+#Run Statistics for Net launch:
+#   Cpu time = 00:00:00, elapsed time = 00:00:00 .
+#   Increased memory =     0.00 (MB), total memory =  3069.82 (MB), peak memory =  3191.91 (MB)
+#Run Statistics for Net init_dbsNet_slist:
+#   Cpu time = 00:00:00, elapsed time = 00:00:00 .
+#   Increased memory =     0.00 (MB), total memory =  3069.82 (MB), peak memory =  3191.91 (MB)
+#Run Statistics for net signature:
+#   Cpu time = 00:00:00, elapsed time = 00:00:00 .
+#   Increased memory =     0.00 (MB), total memory =  3069.82 (MB), peak memory =  3191.91 (MB)
+#Run Statistics for inst signature:
+#   Cpu time = 00:00:00, elapsed time = 00:00:00 .
+#   Increased memory =    -0.80 (MB), total memory =  3069.82 (MB), peak memory =  3191.91 (MB)
+AAE_INFO: 1 threads acquired from CTE.
+Start delay calculation (fullDC) (1 T). (MEM=3106.23)
+*** Calculating scaling factor for max_timing libraries using the default operating condition of each library.
+Reading RCDB with compressed RC data.
+Total number of fetched objects 610
+AAE_INFO: Total number of nets for which stage creation was skipped for all views 0
+AAE_INFO-618: Total number of nets in the design is 618,  99.7 percent of the nets selected for SI analysis
+End delay calculation. (MEM=3127.48 CPU=0:00:00.3 REAL=0:00:00.0)
+End delay calculation (fullDC). (MEM=3112.27 CPU=0:00:00.4 REAL=0:00:01.0)
+Save waveform /home/iclab11/Desktop/viterbi_last/physical_design/innovus_temp_886205_33e2aa6e-ebd5-4d3a-a6da-5c37f359641c_iclab_iclab11_A3Qi48/.AAE_idQFWx/.AAE_886205_33e2aa6e-ebd5-4d3a-a6da-5c37f359641c/waveform.data...
+Loading CTE timing window with TwFlowType 0...(CPU = 0:00:00.0, REAL = 0:00:00.0, MEM = 3118.3M)
+Add other clocks and setupCteToAAEClockMapping during iter 1
+Loading CTE timing window is completed (CPU = 0:00:00.0, REAL = 0:00:00.0, MEM = 3118.3M)
+Starting SI iteration 2
+Start delay calculation (fullDC) (1 T). (MEM=3126.59)
+Glitch Analysis: View wc -- Total Number of Nets Skipped = 12. 
+Glitch Analysis: View wc -- Total Number of Nets Analyzed = 610. 
+Total number of fetched objects 610
+AAE_INFO: Total number of nets for which stage creation was skipped for all views 0
+AAE_INFO-618: Total number of nets in the design is 618,  0.6 percent of the nets selected for SI analysis
+End delay calculation. (MEM=3129.77 CPU=0:00:00.0 REAL=0:00:00.0)
+End delay calculation (fullDC). (MEM=3129.77 CPU=0:00:00.0 REAL=0:00:00.0)
+Load RC corner of view wc
+
+Begin Power Analysis
+
+             0V	    VSS
+          1.62V	    VDD
+
+Begin Processing Timing Library for Power Calculation
+
+Ended Processing Timing Library for Power Calculation: (cpu=0:00:00, real=0:00:00, mem(process/total/peak)=3128.93MB/5778.13MB/3128.93MB)
+
+
+
+Begin Processing Power Net/Grid for Power Calculation
+
+Ended Processing Power Net/Grid for Power Calculation: (cpu=0:00:00, real=0:00:00, mem(process/total/peak)=3128.93MB/5778.13MB/3128.93MB)
+
+Begin Processing Timing Window Data for Power Calculation
+
+clk(200MHz) CK: assigning clock clk to net clk
+Ended Processing Timing Window Data for Power Calculation: (cpu=0:00:00, real=0:00:00, mem(process/total/peak)=3128.93MB/5778.13MB/3128.93MB)
+
+Begin Processing User Attributes
+
+Ended Processing User Attributes: (cpu=0:00:00, real=0:00:00, mem(process/total/peak)=3128.93MB/5778.13MB/3128.93MB)
+
+Begin Processing Signal Activity
+
+
+Starting Levelizing
+2026-May-30 05:49:13 (2026-May-29 22:49:13 GMT)
+2026-May-30 05:49:13 (2026-May-29 22:49:13 GMT): 10%
+2026-May-30 05:49:13 (2026-May-29 22:49:13 GMT): 20%
+2026-May-30 05:49:13 (2026-May-29 22:49:13 GMT): 30%
+2026-May-30 05:49:13 (2026-May-29 22:49:13 GMT): 40%
+2026-May-30 05:49:13 (2026-May-29 22:49:13 GMT): 50%
+2026-May-30 05:49:13 (2026-May-29 22:49:13 GMT): 60%
+2026-May-30 05:49:13 (2026-May-29 22:49:13 GMT): 70%
+2026-May-30 05:49:13 (2026-May-29 22:49:13 GMT): 80%
+2026-May-30 05:49:13 (2026-May-29 22:49:13 GMT): 90%
+
+Finished Levelizing
+2026-May-30 05:49:13 (2026-May-29 22:49:13 GMT)
+
+Starting Activity Propagation
+2026-May-30 05:49:13 (2026-May-29 22:49:13 GMT)
+** INFO:  (VOLTUS_POWR-1356): No default input activity has been set. Defaulting to 0.2.
+Use 'set_default_switching_activity -input_activity' command to change the default activity value.
+
+2026-May-30 05:49:13 (2026-May-29 22:49:13 GMT): 10%
+2026-May-30 05:49:13 (2026-May-29 22:49:13 GMT): 20%
+
+Finished Activity Propagation
+2026-May-30 05:49:13 (2026-May-29 22:49:13 GMT)
+Ended Processing Signal Activity: (cpu=0:00:00, real=0:00:00, mem(process/total/peak)=3129.12MB/5778.13MB/3129.12MB)
+
+Begin Power Computation
+
+      ----------------------------------------------------------
+      # of cell(s) missing both power/leakage table: 0
+      # of cell(s) missing power table: 0
+      # of cell(s) missing leakage table: 0
+      ----------------------------------------------------------
+
+
+
+Starting Calculating power
+2026-May-30 05:49:13 (2026-May-29 22:49:13 GMT)
+ ... Calculating switching power
+2026-May-30 05:49:13 (2026-May-29 22:49:13 GMT): 10%
+2026-May-30 05:49:13 (2026-May-29 22:49:13 GMT): 20%
+2026-May-30 05:49:13 (2026-May-29 22:49:13 GMT): 30%
+2026-May-30 05:49:13 (2026-May-29 22:49:13 GMT): 40%
+2026-May-30 05:49:13 (2026-May-29 22:49:13 GMT): 50%
+ ... Calculating internal and leakage power
+2026-May-30 05:49:13 (2026-May-29 22:49:13 GMT): 60%
+2026-May-30 05:49:13 (2026-May-29 22:49:13 GMT): 70%
+2026-May-30 05:49:13 (2026-May-29 22:49:13 GMT): 80%
+2026-May-30 05:49:13 (2026-May-29 22:49:13 GMT): 90%
+
+Finished Calculating power
+2026-May-30 05:49:13 (2026-May-29 22:49:13 GMT)
+      # of MSMV cell(s) missing power_level: 0
+Ended Power Computation: (cpu=0:00:00, real=0:00:00, mem(process/total/peak)=3130.25MB/5778.13MB/3130.25MB)
+
+Begin Processing User Attributes
+
+Begin Processing set_power
+Ended Processing set_power: (cpu=0:00:00, real=0:00:00,
+mem(process/total/peak)=3130.25MB/5778.13MB/3130.25MB)
+Ended Processing User Attributes: (cpu=0:00:00, real=0:00:00, mem(process/total/peak)=3130.25MB/5778.13MB/3130.25MB)
+
+Ended Power Analysis: (cpu=0:00:00, real=0:00:00, mem(process/total/peak)=3130.25MB/5778.13MB/3130.25MB)
+
+Begin Boundary Leakage Calculation
+Ended Boundary Leakage Calculation: (cpu=0:00:00, real=0:00:00,
+mem(process/total/peak)=3130.38MB/5778.13MB/3130.38MB)
+Begin Static Power Report Generation
+*----------------------------------------------------------------------------------------
+*	Innovus 23.37-s090_1 (64bit) 02/09/2026 16:09 (Linux 3.10.0-693.el7.x86_64)
+*	
+*
+* 	Date & Time:	2026-May-30 05:49:13 (2026-May-29 22:49:13 GMT)
+*
+*----------------------------------------------------------------------------------------
+*
+*	Design: viterbi_top
+*
+*	Liberty Libraries used:
+*	        wc: ../lib/sky130_ss_1.62_125_nldm.lib
+*
+*	Parasitic Files used:
+*
+*       Power View : wc
+*
+*       User-Defined Activity : N.A.
+*
+*       Activity File: N.A.
+*
+*       Hierarchical Global Activity: N.A.
+*
+*       Global Activity: N.A.
+*
+*       Sequential Element Activity: 0.200000
+*
+*       Primary Input Activity: 0.200000
+*
+*       Default icg ratio: N.A.
+*
+*       Global Comb ClockGate Ratio: N.A.
+*
+*	Power Units = 1mW
+*
+*	Time Units = 1e-09 secs
+*
+*       report_power
+*
+-----------------------------------------------------------------------------------------
+*
+
+
+
+Total Power
+-----------------------------------------------------------------------------------------
+Total Internal Power:        0.80261317 	   70.7447%
+Total Switching Power:       0.33103458 	   29.1784%
+Total Leakage Power:         0.00087309 	    0.0770%
+Total Power:                 1.13452083
+-----------------------------------------------------------------------------------------
+
+
+Group                           Internal   Switching     Leakage       Total  Percentage 
+                                Power      Power         Power         Power  (%)        
+-----------------------------------------------------------------------------------------
+Sequential                        0.6354     0.07368   0.0005928      0.7097       62.55
+Macro                                  0           0           0           0           0
+IO                                     0           0           0           0           0
+Combinational                     0.1672      0.2574   0.0002803      0.4248       37.45
+Clock (Combinational)                  0           0           0           0           0
+Clock (Sequential)                     0           0           0           0           0
+-----------------------------------------------------------------------------------------
+Total                             0.8026       0.331   0.0008731       1.135         100
+-----------------------------------------------------------------------------------------
+
+
+Rail                  Voltage   Internal   Switching     Leakage       Total  Percentage 
+                                Power      Power         Power         Power  (%)        
+-----------------------------------------------------------------------------------------
+VDD                      1.62     0.8026       0.331   0.0008731       1.135         100
+ 
+ 
+-----------------------------------------------------------------------------------------
+*	Power Distribution Summary: 
+*              Highest Average Power:            FE_OFC18_rst_n (BUFX2):          0.01339
+*              Highest Leakage Power:       u_sym_ext/valid_reg (DFFRX1):        7.628e-06
+*                Total Cap:      5.30173e-12 F
+*                Total instances in design:   501
+*                Total instances in design with no power:     0
+*                Total instances in design with no activty:     0
+
+*                Total Fillers and Decap:     0
+-----------------------------------------------------------------------------------------
+ 
+** INFO:  (VOLTUS_POWR-3465): There are 0 decaps and 0 fillers in the design
+
+Ended Static Power Report Generation: (cpu=0:00:00, real=0:00:00,
+mem(process/total/peak)=3131.08MB/5778.13MB/3131.08MB)
+

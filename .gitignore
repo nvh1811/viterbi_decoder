@@ -1,0 +1,28 @@
+# ModelSim / QuestaSim
+work/
+transcript
+*.wlf
+*.vcd
+*.fst
+vsim.wlf
+vsim_stacktrace.vstf
+modelsim.ini
+*.cr.mti
+*.mpf
+*.bak
+
+# Vivado
+*.jou
+*.log
+*.str
+.Xil/
+*.cache/
+*.hw/
+*.ip_user_files/
+*.runs/
+*.sim/
+
+# OS / Editor temporary files
+.DS_Store
+Thumbs.db
+*~

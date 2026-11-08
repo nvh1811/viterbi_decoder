@@ -1,0 +1,7 @@
+    Hinst Name       Module Name          Inst Count           Total Area
+----------------------------------------------------------------------
+viterbi_top                                      501             7320.514
+  u_ctrl             ctrl_unit                    18              243.763
+  u_pmsm             pmsm                         40             1066.464
+  u_smu              smu_tbu                     197             3416.494
+  u_sym_ext          sym_extract                  51              750.334
