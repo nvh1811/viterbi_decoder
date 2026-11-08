@@ -99,19 +99,76 @@ Dành cho các bạn mở phần mềm QuestaSim GUI:
 
 ---
 
-## 5. Quy tắc đồng bộ Git giữa các thành viên
+## 5. Hướng dẫn sử dụng Git & Phối hợp nhóm
 
-1. **Luôn Pull trước khi làm việc:**
+### 5.1. Quy định vùng code (Tránh xung đột Merge Conflict)
+Mỗi thành viên chỉ chỉnh sửa trong phạm vi file được phân công để hạn chế tối đa xung đột code:
+- **Hiếu:** Chỉ sửa các file thiết kế trong thư mục `rtl/`.
+- **Tuyển:** Chỉ sửa các file testbench được giao (`tb_input_buffer.v`, `tb_controller.v`, `tb_survivor_mem.v`, `tb_traceback.v`).
+- **Nhật:** Chỉ sửa các file testbench được giao (`tb_bmc.v`, `tb_acs.v`, `tb_metric_update.v`, `tb_viterbi_decoder.v`).
+
+---
+
+### 5.2. Lần đầu tải dự án về máy (Clone)
+Nếu máy bạn chưa có dự án, mở Terminal trong VS Code và chạy:
+```bash
+git clone <URL_repo_GitHub>
+cd Viterbi_decoder
+```
+
+---
+
+### 5.3. Quy trình làm việc (Pull → Sửa file → Commit → Push)
+
+Cả nhóm thống nhất làm việc trực tiếp trên nhánh `main` theo đúng 4 bước sau:
+
+1. **Bước 1 — Luôn kéo code mới nhất về trước khi sửa file:**
    ```bash
-   git pull
+   git pull origin main
    ```
-2. **Quy định vùng code (Tránh xung đột Merge Conflict):**
-   - **Hiếu:** Chỉ sửa các file trong thư mục `rtl/`.
-   - **Tuyển:** Chỉ sửa các file testbench được giao (`tb_input_buffer.v`, `tb_controller.v`, `tb_survivor_mem.v`, `tb_traceback.v`).
-   - **Nhật:** Chỉ sửa các file testbench được giao (`tb_bmc.v`, `tb_acs.v`, `tb_metric_update.v`, `tb_viterbi_decoder.v`).
-3. **Commit & Push sau khi hoàn thành:**
+2. **Bước 2 — Chỉnh sửa file & chạy mô phỏng kiểm tra:**
+   - Sửa các file được phân công trong `rtl/` hoặc `testbench/`.
+   - Chạy mô phỏng tại thư mục `sim/` để đảm bảo code không bị lỗi cú pháp.
+3. **Bước 3 — Kiểm tra các file vừa thay đổi:**
    ```bash
-   git add .
-   git commit -m "[RTL/TB] Mo ta ngan gon noi dung thay doi"
-   git push
+   git status
    ```
+4. **Bước 4 — Lưu thay đổi (Commit) và đẩy lên GitHub (Push):**
+   ```bash
+   git add .                                              # Hoặc git add <tên_file>
+   git commit -m "[RTL/TB] Mo ta ngan gon noi dung sua"
+   git push origin main
+   ```
+
+---
+
+### 5.4. Bảng tra cứu nhanh các lệnh Git thường dùng
+
+| Mục đích | Câu lệnh Git |
+| :--- | :--- |
+| Kéo code mới nhất từ GitHub về máy | `git pull origin main` |
+| Xem trạng thái các file đang sửa | `git status` |
+| Xem chi tiết các dòng code vừa sửa | `git diff` |
+| Xem lịch sử commit gọn gàng | `git log --oneline` |
+| Hủy bỏ thay đổi của 1 file (khi sửa nhầm, chưa `git add`) | `git checkout -- <đường_dẫn_file>` |
+| Bỏ file ra khỏi vùng chuẩn bị commit (đã lỡ `git add`) | `git reset HEAD <đường_dẫn_file>` |
+| Tạm cất code đang sửa dở để `git pull` | `git stash` *(lấy lại bằng `git stash pop`)* |
+
+---
+
+### 5.5. Cách xử lý khi bị từ chối Push hoặc gặp xung đột (Conflict)
+
+- **Trường hợp 1: Báo lỗi `rejected - non-fast-forward` khi `git push`** (do bạn cùng nhóm vừa đẩy code mới lên mà máy bạn chưa cập nhật):
+  ```bash
+  git pull --rebase origin main
+  git push origin main
+  ```
+- **Trường hợp 2: Báo lỗi `CONFLICT` khi `git pull`** (do 2 người vô tình sửa cùng 1 file):
+  1. Mở file bị báo lỗi trong VS Code, tìm các đoạn đánh dấu `<<<<<<<`, `=======`, `>>>>>>>`.
+  2. Nhấn chọn trực tiếp trên VS Code: **Accept Current Change** (giữ code của bạn), **Accept Incoming Change** (lấy code trên mạng), hoặc **Accept Both Changes** (giữ cả hai), rồi lưu file lại (`Ctrl + S`).
+  3. Hoàn tất và đẩy lên lại:
+     ```bash
+     git add <file_bị_xung_đột>
+     git commit -m "Fix merge conflict"
+     git push origin main
+     ```
