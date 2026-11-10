@@ -21,6 +21,14 @@ module survivor_mem (
     output wire [3:0] survivor_word   // Đầu ra đọc tổ hợp của survivor_mem[tb_step]
 );
 
-    // TODO (VT-016): Khai báo mảng 8x4 bit, logic ghi đồng bộ và đọc tổ hợp
+    reg [3:0] sur_mem [7:0];
+
+    always@(posedge clk) begin
+        if(rst_n && survivor_we) begin
+            sur_mem[fwd_step] <= decision_vec;
+        end
+    end
+
+    assign survivor_word = sur_mem[tb_step];
 
 endmodule
