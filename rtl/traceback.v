@@ -29,10 +29,12 @@ module traceback (
         if (pm01 < pm_min) begin
             pm_min = pm01;
             min_state = 2'b01;
-        end else if(pm10 < pm_min) begin
+        end
+        if(pm10 < pm_min) begin
             pm_min = pm10;
             min_state = 2'b10;
-        end else if(pm11 < pm_min) begin
+        end
+        if(pm11 < pm_min) begin
             pm_min = pm11;
             min_state = 2'b11;
         end

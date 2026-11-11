@@ -46,7 +46,7 @@ module controller (
                     state   <= TRACEBACK;
                     tb_step <= 3'd7;
                 end
-                FORWARD: begin
+                TRACEBACK: begin
                     if(tb_step == 3'd0) state <= DONE;
                     else tb_step <= tb_step - 3'd1;
                 end
