@@ -1,20 +1,3 @@
-// =============================================================================
-// File        : traceback.v
-// Module      : traceback
-// Project     : Bộ giải mã Viterbi (K=3, R=1/2) — Nhóm 9 VLSI
-// Task        : VT-017 (Phụ trách: Nguyễn Văn Hiếu)
-// Tham chiếu  : Mục 9.5 (Bảng 23 & Hình 11) — Đặc tả thiết kế BTL_Nhóm 9_VLSI
-// Chức năng   :
-//   - Reset (rst_n = 0): xóa tb_state, decoded_work và data_out về 0.
-//   - Khi select_en = 1 (pha SELECT): chọn trạng thái có PM cuối nhỏ nhất từ pm_bus
-//     (nếu hòa ưu tiên 00 -> 01 -> 10 -> 11) nạp vào tb_state, xóa decoded_work = 0.
-//   - Khi tb_en = 1 (pha TRACEBACK):
-//       + Ghi tb_state[1] vào decoded_work[7 - tb_step]
-//       + Đọc decision = survivor_word[tb_state]
-//       + Cập nhật tb_state <= {tb_state[0], decision}
-//   - Khi out_en = 1 (pha DONE): chốt decoded_work[7:0] sang data_out[7:0].
-// =============================================================================
-
 module traceback (
     input  wire        clk,            // Clock; cập nhật thanh ghi tại cạnh lên
     input  wire        rst_n,          // Reset bất đồng bộ, tích cực mức 0

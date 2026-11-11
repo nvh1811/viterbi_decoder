@@ -1,14 +1,3 @@
-// =============================================================================
-// File        : viterbi_decoder.v
-// Module      : viterbi_decoder (Top-level Module)
-// Project     : Bộ giải mã Viterbi (K=3, R=1/2) — Nhóm 9 VLSI
-// Task        : VT-019 (Phụ trách: Nguyễn Văn Hiếu)
-// Tham chiếu  : Mục 4.1 (Bảng 6), Mục 5 & Mục 6 — Đặc tả thiết kế BTL_Nhóm 9_VLSI
-// Chức năng   :
-//   - Kết nối 5 khối chức năng: input_buffer, metric_update, survivor_mem,
-//     traceback, và controller.
-// =============================================================================
-
 module viterbi_decoder (
     input  wire        clk,       // Clock hệ thống (cạnh lên)
     input  wire        rst_n,     // Reset bất đồng bộ, tích cực mức thấp
@@ -17,10 +6,7 @@ module viterbi_decoder (
     output wire [7:0]  data_out,  // Kết quả giải mã 8-bit (hợp lệ khi done = 1)
     output wire        done       // Báo hoàn thành giải mã trong 1 chu kỳ clock
 );
-
-    // -------------------------------------------------------------------------
     // Dây tín hiệu điều khiển nội bộ (Bảng 12 - Mục 6.2)
-    // -------------------------------------------------------------------------
     wire       frame_load;
     wire       frame_init;
     wire       metric_en;
@@ -29,19 +15,15 @@ module viterbi_decoder (
     wire       tb_en;
     wire       out_en;
 
-    // -------------------------------------------------------------------------
     // Dây tín hiệu dữ liệu & địa chỉ nội bộ (Bảng 11 - Mục 6.1)
-    // -------------------------------------------------------------------------
     wire [2:0]  fwd_step;
     wire [2:0]  tb_step;
     wire [1:0]  rx_pair;
     wire [19:0] pm_bus;
     wire [3:0]  decision_vec;
     wire [3:0]  survivor_word;
-
-    // -------------------------------------------------------------------------
+    
     // Khởi tạo và kết nối 5 khối chức năng (Bảng 9 - Mục 5.2)
-    // -------------------------------------------------------------------------
     controller u_controller (
         .clk         (clk),
         .rst_n       (rst_n),
