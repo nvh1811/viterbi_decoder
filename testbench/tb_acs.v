@@ -31,7 +31,7 @@ module tb_acs;
     //Khởi tạo các biến
     integer pa, pb, ba, bb;
     integer tonga, tongb;
-    integer pm
+    reg [4:0] pm;
     reg dec;
     
     initial begin
