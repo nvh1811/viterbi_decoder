@@ -30,6 +30,7 @@ module tb_viterbi_decoder;
     reg [15:0] input_vectors    [0:NUM_VECTORS-1];
     reg [7:0]  expected_outputs [0:NUM_VECTORS-1];
 
+    integer i;
     // Khởi tạo DUT (Top-level module)
     viterbi_decoder dut (
         .clk      (clk),
@@ -60,7 +61,24 @@ module tb_viterbi_decoder;
         // - Giải phóng reset, đưa từng khung input_vectors[i] vào data_in cùng xung start = 1 (1 clock)
         // - Chờ đúng 18 chu kỳ clock (done == 1), đối chiếu data_out với expected_outputs[i]
         // - Thống kê số lượng PASS / FAIL trên toàn bộ 1024 vector.
-
+        for (i = 0; i < NUM_VECTORS; i = i + 1) begin
+            data_in = input_vectors[i];
+            start   = 1'b1;
+            @(negedge clk);
+            start = 1'b0;
+            repeat (18) @(posedge clk);
+            if (done !== 1'b1) begin
+                $display("FAIL - Vector %0d", i);
+            end
+            else begin
+                if (data_out === expected_outputs[i]) begin
+                    $display("TRUE - Vector %0d", i);
+                end
+                else begin
+                    $display("FAIL - Vector %0d: Input=%b Expected=%b Actual=%b", i, input_vectors[i], expected_outputs[i], data_out);
+                end
+            end
+        end
         #100;
         $finish;
     end
