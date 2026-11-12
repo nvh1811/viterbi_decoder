@@ -31,40 +31,40 @@ module tb_bmc;
         rx_pair = 2'b00;
         #1
         if ((bm00 !== 2'd0) || (bm01 !== 2'd1) || (bm10 !== 2'd1) || (bm11 !== 2'd2)) begin
-            $display (FAIL);
+            $display ("00 FAIL");
         end
         else begin
-            $display (SUCCESS);
+            $display ("00 SUCCESS");
         end
 
         // kiểm tra khi 10
         rx_pair = 2'b10;
         #1
         if ((bm00 !== 2'd1) || (bm01 !== 2'd2) || (bm10 !== 2'd0) || (bm11 !== 2'd1)) begin
-            $display (FAIL);
+            $display ("10 FAIL");
         end
         else begin
-            $display (SUCCESS);
+            $display ("10 SUCCESS");
         end
 
         // kiểm tra khi 01
         rx_pair = 2'b01;
         #1
         if ((bm00 !== 2'd1) || (bm01 !== 2'd0) || (bm10 !== 2'd2) || (bm11 !== 2'd1)) begin
-            $display (FAIL);
+            $display ("01 FAIL");
         end
         else begin
-            $display (SUCCESS);
+            $display ("01 SUCCESS");
         end
 
         // kiểm tra khi 11
         rx_pair = 2'b11;
         #1
         if ((bm00 !== 2'd2) || (bm01 !== 2'd1) || (bm10 !== 2'd1) || (bm11 !== 2'd0)) begin
-            $display (FAIL);
+            $display ("11 FAIL");
         end
         else begin
-            $display (SUCCESS);
+            $display ("11 SUCCESS");
         end
         // TODO (VT-020b - N04, TC-02):
         // - Quét rx_pair = 00, 01, 10, 11 và đối chiếu bm00, bm01, bm10, bm11 với Bảng 19
