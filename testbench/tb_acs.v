@@ -28,12 +28,54 @@ module tb_acs;
         .decision (decision)
     );
 
+    //Khởi tạo các biến
+    integer pa, pb, ba, bb;
+    integer tonga, tongb;
+    integer pm
+    reg dec;
+    
     initial begin
-        pm_a = 5'd0;
-        pm_b = 5'd31;
-        bm_a = 2'd0;
-        bm_b = 2'd0;
+        
+        for (pa = 30; pa <=31; pa = pa + 1) begin
+            for (pb = 30; pb <=31; pb = pb + 1) begin
+                for (ba = 0; ba <=2; ba = ba + 1) begin
+                    for (bb = 0; bb <=2; bb = bb + 1) begin
 
+                        pm_a = pa;
+                        pm_b = pb;
+                        bm_a = ba;
+                        bm_b = bb;
+                        #1;
+
+                        tonga = pa + ba;
+                        tongb = pb + bb;
+                    
+                        if (tonga > 31) begin
+                            tonga = 31;
+                        end
+                        if (tongb > 31) begin
+                            tongb = 31;
+                        end
+
+                        if (tonga > tongb) begin
+                            pm = tongb;
+                            dec = 1'b1;
+                        end
+                        if (tonga <= tongb) begin
+                            pm = tonga;
+                            dec = 1'b0;
+                        end
+
+                        if ((next_pm !== pm) || (decision !== dec)) begin
+                            $display ("FAIL: PA=%0d, BA=%0d, PB=%0d, BB=%0d", pa, ba, pb, bb);
+                            $display ("TRUE: PM=%0d, BM=%b", pm, dec);
+                            $display ("FALSE: PM=%0d, BM=%b", next_pm, decision);
+                        end
+                        
+                    end
+                end
+            end
+        end
         // TODO (VT-020b - N05, TC-03):
         // - Kiểm tra bão hòa tại 31 khi pm_a/pm_b = 30, 31 và bm = 0, 1, 2
         // - Kiểm tra chọn nhánh nhỏ hơn và ưu tiên nhánh A (decision = 0) khi hòa
