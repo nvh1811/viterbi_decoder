@@ -25,6 +25,42 @@ module tb_metric_update;
     wire [4:0] pm10 = pm_bus[14:10];
     wire [4:0] pm11 = pm_bus[19:15];
 
+    // Task
+    task buoc;
+        input [1:0] rx;
+        input [4:0] exp00;
+        input [4:0] exp01;
+        input [4:0] exp10;
+        input [4:0] exp11;
+
+        reg [19:0] old_pm_bus;
+
+        initial begin
+            @(negedge clk);
+            old_pm_bus = pm_bus;
+            rx_pair = rx;
+            metric_en = 1'b1;
+            #1;
+
+            if (pm_bus !== old_pm_bus) begin
+                $display("FAIL");
+            end
+
+            @(posedge clk);
+            #1;
+
+            if (pm_bus !== {exp11, exp10, exp01, exp00}) begin
+
+                $display("FAIL: rx_pair = %b", rx);
+            end
+            else begin
+
+                $display("PASS: rx_pair=%b", rx);
+            end
+            metric_en = 1'b0;
+        end
+    endtask
+    
     // Khởi tạo DUT
     metric_update dut (
         .clk          (clk),
@@ -46,11 +82,48 @@ module tb_metric_update;
         metric_en  = 1'b0;
         rx_pair    = 2'b00;
 
+        #1
         // TODO (VT-020b - N06):
         // - Kiểm tra reset đặt 4 PM = (31, 31, 31, 31)
+        if (pm_bus !== {5'd31, 5'd31, 5'd31, 5'd31}) begin
+            $display("FALSE");
+        end
+        else begin
+            $display("SUCCESS");
+        end
+        
         // - Kiểm tra frame_init đặt 4 PM = (0, 31, 31, 31)
+        if (pm_bus !== {5'd31, 5'd31, 5'd31, 5'd0}) begin
+            $display("FALSE");
+        end
+        else begin
+            $display("SUCCESS");
+        end
         // - Kiểm tra 8 bước cập nhật PM theo ví dụ Mục 2.5 trong Docs
+        // Bước 1
+        buoc(1'b00, 5'd0, 5'd31, 5'd2, 5'd31);
 
+        // Bước 2
+        buoc(1'b11, 5'd2, 5'd3, 5'd0, 5'd3);
+
+        // Bước 3
+        buoc(1'b11, 5'd3, 5'd1, 5'd2, 5'd1);
+
+        // Bước 4
+        buoc(1'b01, 5'd2, 5'd1, 5'd4, 5'd1);
+
+        // Bước 5
+        buoc(1'b10, 5'd2, 5'd3, 5'd2, 5'd3);
+
+        // Bước 6
+        buoc(1'b11, 5'd4, 5'd3, 5'd2, 5'd3);
+        
+        // Bước 7
+        buoc(1'b10, 5'd4, 5'd2, 5'd4, 5'd4);
+        
+        // Bước 8
+        buoc(1'b10, 5'd2, 5'd5, 5'd4, 5'd5);
+        
         #50;
         $finish;
     end
