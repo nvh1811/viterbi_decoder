@@ -35,7 +35,7 @@ module tb_metric_update;
 
         reg [19:0] old_pm_bus;
 
-        initial begin
+        begin
             @(negedge clk);
             old_pm_bus = pm_bus;
             rx_pair = rx;
@@ -93,36 +93,46 @@ module tb_metric_update;
         end
         
         // - Kiểm tra frame_init đặt 4 PM = (0, 31, 31, 31)
+        @(negedge clk);
+        rst_n      = 1'b1;
+        frame_init = 1'b1;
+    
+        @(posedge clk);
+        #1;
+        
         if (pm_bus !== {5'd31, 5'd31, 5'd31, 5'd0}) begin
             $display("FALSE");
         end
         else begin
             $display("SUCCESS");
         end
+
+        frame_init = 1'b0;
+        
         // - Kiểm tra 8 bước cập nhật PM theo ví dụ Mục 2.5 trong Docs
         // Bước 1
-        buoc(1'b00, 5'd0, 5'd31, 5'd2, 5'd31);
+        buoc(2'b00, 5'd0, 5'd31, 5'd2, 5'd31);
 
         // Bước 2
-        buoc(1'b11, 5'd2, 5'd3, 5'd0, 5'd3);
+        buoc(2'b11, 5'd2, 5'd3, 5'd0, 5'd3);
 
         // Bước 3
-        buoc(1'b11, 5'd3, 5'd1, 5'd2, 5'd1);
+        buoc(2'b11, 5'd3, 5'd1, 5'd2, 5'd1);
 
         // Bước 4
-        buoc(1'b01, 5'd2, 5'd1, 5'd4, 5'd1);
+        buoc(2'b01, 5'd2, 5'd1, 5'd4, 5'd1);
 
         // Bước 5
-        buoc(1'b10, 5'd2, 5'd3, 5'd2, 5'd3);
+        buoc(2'b10, 5'd2, 5'd3, 5'd2, 5'd3);
 
         // Bước 6
-        buoc(1'b11, 5'd4, 5'd3, 5'd2, 5'd3);
+        buoc(2'b11, 5'd4, 5'd3, 5'd2, 5'd3);
         
         // Bước 7
-        buoc(1'b10, 5'd4, 5'd2, 5'd4, 5'd4);
+        buoc(2'b10, 5'd4, 5'd2, 5'd4, 5'd4);
         
         // Bước 8
-        buoc(1'b10, 5'd2, 5'd5, 5'd4, 5'd5);
+        buoc(2'b10, 5'd2, 5'd5, 5'd4, 5'd5);
         
         #50;
         $finish;
