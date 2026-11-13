@@ -22,8 +22,8 @@ module tb_acs;
     acs dut (
         .pm_a     (pm_a),
         .pm_b     (pm_b),
-        .bm_a     (bm_a),
-        .bm_b     (bm_b),
+        .bma     (bm_a),
+        .bmb     (bm_b),
         .next_pm  (next_pm),
         .decision (decision)
     );
