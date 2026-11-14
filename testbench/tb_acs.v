@@ -33,8 +33,11 @@ module tb_acs;
     integer tonga, tongb;
     reg [4:0] pm;
     reg dec;
+
+    integer error_count;
     
     initial begin
+        error_count = 0;
         
         for (pa = 30; pa <=31; pa = pa + 1) begin
             for (pb = 30; pb <=31; pb = pb + 1) begin
@@ -67,11 +70,8 @@ module tb_acs;
                         end
 
                         if ((next_pm !== pm) || (decision !== dec)) begin
-                            $display ("FAIL: PA=%0d, BA=%0d, PB=%0d, BB=%0d", pa, ba, pb, bb);
-                            $display ("TRUE: PM=%0d, BM=%b", pm, dec);
-                            $display ("FALSE: PM=%0d, BM=%b", next_pm, decision);
+                            error_count = error_count + 1;
                         end
-                        
                     end
                 end
             end
@@ -79,7 +79,9 @@ module tb_acs;
         // TODO (VT-020b - N05, TC-03):
         // - Kiểm tra bão hòa tại 31 khi pm_a/pm_b = 30, 31 và bm = 0, 1, 2
         // - Kiểm tra chọn nhánh nhỏ hơn và ưu tiên nhánh A (decision = 0) khi hòa
-
+        if (error_count > 0) begin
+            $display("TONG SO LOI tb_acs = %0d", error_count);
+        end
         #20;
         $finish;
     end
