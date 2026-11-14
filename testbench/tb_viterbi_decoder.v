@@ -74,6 +74,9 @@ module tb_viterbi_decoder;
             @(negedge clk);
             start = 1'b0;
             repeat (18) @(posedge clk);
+
+            @(negedge clk);
+
             if (done !== 1'b1) begin
                 $display("FAIL - Vector %0d", i);
             end
