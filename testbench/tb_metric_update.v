@@ -127,7 +127,10 @@ module tb_metric_update;
         
         // Bước 8
         buoc(2'b10, 5'd2, 5'd5, 5'd4, 5'd5);
-        
+
+        if (error_count > 0) begin
+            $display("TONG SO LOI tb_metric_update = %0d", error_count);
+        end
         #50;
         $finish;
     end
