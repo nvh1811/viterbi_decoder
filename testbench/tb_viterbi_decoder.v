@@ -31,6 +31,7 @@ module tb_viterbi_decoder;
     reg [7:0]  expected_outputs [0:NUM_VECTORS-1];
 
     integer i;
+    integer error_count;
     // Khởi tạo DUT (Top-level module)
     viterbi_decoder dut (
         .clk      (clk),
@@ -57,6 +58,7 @@ module tb_viterbi_decoder;
         start   = 1'b0;
         data_in = 16'h0000;
 
+        error_count = 0;
         // TODO (VT-020d - TC-05 .. TC-12):
         // - Giải phóng reset, đưa từng khung input_vectors[i] vào data_in cùng xung start = 1 (1 clock)
         // - Chờ đúng 18 chu kỳ clock (done == 1), đối chiếu data_out với expected_outputs[i]
@@ -78,16 +80,16 @@ module tb_viterbi_decoder;
             @(negedge clk);
 
             if (done !== 1'b1) begin
-                $display("FAIL - Vector %0d", i);
+                error_count = error_count + 1;
             end
             else begin
-                if (data_out === expected_outputs[i]) begin
-                    $display("TRUE - Vector %0d", i);
-                end
-                else begin
-                    $display("FAIL - Vector %0d: Input=%b Expected=%b Actual=%b", i, input_vectors[i], expected_outputs[i], data_out);
+                if (data_out !== expected_outputs[i]) begin
+                    error_count = error_count + 1;
                 end
             end
+        end
+        if (error_count > 0) begin
+            $display("TONG SO LOI tb_metric_update = %0d", error_count);
         end
         #100;
         $finish;
