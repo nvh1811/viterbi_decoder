@@ -25,6 +25,8 @@ module tb_metric_update;
     wire [4:0] pm10 = pm_bus[14:10];
     wire [4:0] pm11 = pm_bus[19:15];
 
+    integer error_count;
+
     // Task
     task buoc;
         input [1:0] rx;
@@ -43,20 +45,16 @@ module tb_metric_update;
             #1;
 
             if (pm_bus !== old_pm_bus) begin
-                $display("FAIL");
+                error_count = error_count + 1;
             end
 
             @(posedge clk);
             #1;
 
             if (pm_bus !== {exp11, exp10, exp01, exp00}) begin
-
-                $display("FAIL: rx_pair = %b", rx);
+                error_count = error_count + 1;
             end
-            else begin
-
-                $display("PASS: rx_pair=%b", rx);
-            end
+            
             metric_en = 1'b0;
         end
     endtask
@@ -82,16 +80,15 @@ module tb_metric_update;
         metric_en  = 1'b0;
         rx_pair    = 2'b00;
 
+        error_count = 0;
+
         #1
         // TODO (VT-020b - N06):
         // - Kiểm tra reset đặt 4 PM = (31, 31, 31, 31)
         if (pm_bus !== {5'd31, 5'd31, 5'd31, 5'd31}) begin
-            $display("FALSE");
+            error_count = error_count + 1;
         end
-        else begin
-            $display("SUCCESS");
-        end
-        
+                
         // - Kiểm tra frame_init đặt 4 PM = (0, 31, 31, 31)
         @(negedge clk);
         rst_n      = 1'b1;
@@ -101,12 +98,9 @@ module tb_metric_update;
         #1;
         
         if (pm_bus !== {5'd31, 5'd31, 5'd31, 5'd0}) begin
-            $display("FALSE");
+            error_count = error_count + 1;
         end
-        else begin
-            $display("SUCCESS");
-        end
-
+        
         frame_init = 1'b0;
         
         // - Kiểm tra 8 bước cập nhật PM theo ví dụ Mục 2.5 trong Docs
