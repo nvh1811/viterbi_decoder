@@ -17,6 +17,7 @@ module tb_bmc;
     wire [1:0] bm10;
     wire [1:0] bm11;
 
+    integer error_count;
     // Khởi tạo DUT (module bmc)
     bmc dut (
         .rx_pair (rx_pair),
@@ -27,44 +28,37 @@ module tb_bmc;
     );
 
     initial begin
+        error_count = 0;
         // kiểm tra khi 00
         rx_pair = 2'b00;
         #1
         if ((bm00 !== 2'd0) || (bm01 !== 2'd1) || (bm10 !== 2'd1) || (bm11 !== 2'd2)) begin
-            $display ("00 FAIL");
+            error_count = error_count +1;
         end
-        else begin
-            $display ("00 SUCCESS");
-        end
-
+        
         // kiểm tra khi 10
         rx_pair = 2'b10;
         #1
         if ((bm00 !== 2'd1) || (bm01 !== 2'd2) || (bm10 !== 2'd0) || (bm11 !== 2'd1)) begin
-            $display ("10 FAIL");
+            error_count = error_count +1;
         end
-        else begin
-            $display ("10 SUCCESS");
-        end
-
+        
         // kiểm tra khi 01
         rx_pair = 2'b01;
         #1
         if ((bm00 !== 2'd1) || (bm01 !== 2'd0) || (bm10 !== 2'd2) || (bm11 !== 2'd1)) begin
-            $display ("01 FAIL");
+            error_count = error_count +1;
         end
-        else begin
-            $display ("01 SUCCESS");
-        end
-
+       
         // kiểm tra khi 11
         rx_pair = 2'b11;
         #1
         if ((bm00 !== 2'd2) || (bm01 !== 2'd1) || (bm10 !== 2'd1) || (bm11 !== 2'd0)) begin
-            $display ("11 FAIL");
+            error_count = error_count +1;
         end
-        else begin
-            $display ("11 SUCCESS");
+
+        if (error_count > 0) begin
+            $display("TONG SO LOI tb_bmc = %0d", error_count);
         end
         // TODO (VT-020b - N04, TC-02):
         // - Quét rx_pair = 00, 01, 10, 11 và đối chiếu bm00, bm01, bm10, bm11 với Bảng 19
