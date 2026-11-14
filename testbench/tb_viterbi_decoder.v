@@ -15,7 +15,7 @@
 module tb_viterbi_decoder;
 
     // Tham số kiểm thử
-    localparam NUM_VECTORS = 1024;
+    localparam NUM_VECTORS = 1025;
     localparam CLK_PERIOD  = 5.0; // 200 MHz (5ns)
 
     // Tín hiệu kết nối DUT
@@ -61,6 +61,13 @@ module tb_viterbi_decoder;
         // - Giải phóng reset, đưa từng khung input_vectors[i] vào data_in cùng xung start = 1 (1 clock)
         // - Chờ đúng 18 chu kỳ clock (done == 1), đối chiếu data_out với expected_outputs[i]
         // - Thống kê số lượng PASS / FAIL trên toàn bộ 1024 vector.
+        @(negedge clk);
+        @(negedge clk);
+
+        rst_n = 1'b1;
+
+        @(negedge clk);
+        
         for (i = 0; i < NUM_VECTORS; i = i + 1) begin
             data_in = input_vectors[i];
             start   = 1'b1;
