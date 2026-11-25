@@ -1,0 +1,48 @@
+{
+  signal: [
+    {name: 'clk',            wave: 'P..................', period: 2},
+    {name: 'rstn',           wave: '0....1.....0.1.....................0..'},
+    {name: 'viterbi_enable', wave: '01.0.1.0.....1.0...1.0................'},
+    {name: 'state[2:0]',     wave: '2.....3....2..3...............4.5..2..',
+      data: ['IDLE', 'FORWARD', 'IDLE', 'FORWARD', 'SELECT', 'TRACEBACK', 'IDLE']},
+    {name: 'fwd_step[2:0]',  wave: '=.......=.==....=.=.=.=.=.=.=......=..',
+      data: ['0', '1', '2', '0', '1', '2', '3', '4', '5', '6', '7', '0']},
+    {name: 'tb_step[2:0]',   wave: '=...............................=.==..',
+      data: ['0', '7', '6', '0']},
+    {name: 'frame_load',     wave: '0....10......10.......................'},
+    {name: 'frame_init',     wave: '0....10......10.......................'},
+    {name: 'metric_en',      wave: '0.....1....0..1...............0.......'},
+    {name: 'survivor_we',    wave: '0.....1....0..1...............0.......'},
+    {name: 'select_en',      wave: '0.............................1.0.....'},
+    {name: 'tb_en',          wave: '0...............................1..0..'},
+    {name: 'out_en',         wave: '0.....................................'},
+    {name: 'output_done',    wave: '0.....................................'},
+    {name: 'Mốc cạnh',       wave: '=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.',
+      data: [
+        'E0',  'E1',  'E2',  'E3',  'E4',  'E5',
+        'E6',  'E7',  'E8',  'E9',  'E10', 'E11',
+        'E12', 'E13', 'E14', 'E15', 'E16', 'E17',
+        'E18'
+      ]},
+    {},
+  ],
+
+  head: {
+    text: 'controller'
+  },
+
+  foot: {
+    text: [
+      'tspan',
+      ['tspan', {x: '35%', dy: '-2.4em', 'text-anchor': 'middle'},
+        'IDLE(000) → FORWARD(001, 8 nhịp) → SELECT(010) → TRACEBACK(011).'],
+  	  ['tspan', {x: '35%', dy: '1.5em', 'text-anchor': 'middle'},
+        'bỏ qua viterbi_enable khi đang bận; rstn=0 đưa về IDLE.'],
+    ]
+  },
+
+  config: {
+    hscale: 1,
+    skin: 'narrow'
+  }
+}
