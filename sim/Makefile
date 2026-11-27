@@ -1,7 +1,7 @@
 # =============================================================================
 # Makefile cho BTL Viterbi Decoder — Nhóm 9 VLSI
 # Cách dùng:
-#   make              : Chạy mô phỏng Top testbench (tb_viterbi_decoder)
+#   make              : Chạy mô phỏng Top testbench (tb_viterbi_top)
 #   make gui          : Mở giao diện Waveform QuestaSim cho Top testbench
 #   make unit TB=tb_bmc : Chạy riêng 1 unit testbench bất kỳ
 #   make all_unit     : Chạy kiểm thử toàn bộ 7 unit testbench
@@ -11,7 +11,7 @@
 SHELL    := /bin/bash
 RUN_DIR  := run
 FILELIST := filelist.f
-TB       ?= tb_viterbi_decoder
+TB       ?= tb_viterbi_top
 
 # Danh sách tất cả các Unit Testbench (Tuyển & Nhật)
 UNIT_TESTS := tb_input_buffer tb_controller tb_bmc tb_acs tb_metric_update tb_survivor_mem tb_traceback
@@ -54,3 +54,13 @@ all_unit:
 # 5. Dọn dẹp file tạm
 clean:
 	rm -rf $(RUN_DIR) transcript *.wlf vsim.wlf modelsim.ini
+
+# 6. Đo Code Coverage cho DUT (Statement, Branch, Condition, Expression, FSM, Toggle)
+cov:
+	@mkdir -p $(RUN_DIR)
+	@if [ -d "$(RUN_DIR)/work_cov" ]; then vdel -lib $(RUN_DIR)/work_cov -all; fi
+	vlib $(RUN_DIR)/work_cov
+	vlog +cover=sbceft -timescale "1ns/1ps" -work $(RUN_DIR)/work_cov -f $(FILELIST) > $(RUN_DIR)/build_cov.log 2>&1
+	vsim -c -coverage -work $(RUN_DIR)/work_cov $(TB) -do "coverage save -onexit $(RUN_DIR)/cov.ucdb; run -all; quit -f" | tee $(RUN_DIR)/sim_cov.log
+	vcover report -details -codeAll -instance /$(TB)/dut $(RUN_DIR)/cov.ucdb > $(RUN_DIR)/cov_report.txt
+	vcover report -html -htmldir $(RUN_DIR)/cov_html -details -codeAll -instance /$(TB)/dut $(RUN_DIR)/cov.ucdb
