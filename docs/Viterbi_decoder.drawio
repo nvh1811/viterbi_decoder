@@ -2272,7 +2272,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="nWPVBEVxXfgcn-n-Al-m" name="survivor_mem_table">
-    <mxGraphModel dx="1694" dy="1036" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2200" pageHeight="1210" math="0" shadow="0">
+    <mxGraphModel dx="2038" dy="1246" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2200" pageHeight="1210" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -2291,7 +2291,7 @@
         <mxCell id="m6" parent="1" style="whiteSpace=wrap;html=1;rounded=0;strokeColor=#64748B;fillColor=#FFFFFF;fontFamily=Arial;fontSize=17;fontColor=#172B4D;fillColor=#F5F9FD;strokeColor=#5C8FB5;strokeWidth=2;rounded=1;arcSize=4;" value="" vertex="1">
           <mxGeometry height="450" width="660" x="420" y="170" as="geometry" />
         </mxCell>
-        <mxCell id="m7" parent="1" style="whiteSpace=wrap;html=1;rounded=0;strokeColor=#64748B;fillColor=#FFFFFF;fontFamily=Arial;fontSize=17;fontColor=#172B4D;strokeColor=none;fillColor=none;fontFamily=Courier New;fontStyle=1;fontSize=22;" value="survivor_mem" vertex="1">
+        <mxCell id="m7" parent="1" style="whiteSpace=wrap;html=1;rounded=0;strokeColor=#64748B;fillColor=#FFFFFF;fontFamily=Arial;fontSize=17;fontColor=#172B4D;strokeColor=none;fillColor=none;fontFamily=Courier New;fontStyle=1;fontSize=22;" value="sur_mem" vertex="1">
           <mxGeometry height="32" width="620" x="440" y="180" as="geometry" />
         </mxCell>
         <mxCell id="m8" parent="1" style="whiteSpace=wrap;html=1;rounded=0;strokeColor=#64748B;fillColor=#FFFFFF;fontFamily=Arial;fontSize=17;fontColor=#172B4D;fillColor=#D9EAF7;strokeColor=#7D9DB7;fontStyle=1;fontSize=16;" value="&lt;font style=&quot;font-size: 19px;&quot;&gt;Địa chỉ&lt;/font&gt;" vertex="1">
@@ -2520,7 +2520,7 @@
         <mxCell id="m68" parent="1" style="whiteSpace=wrap;html=1;rounded=0;strokeColor=#64748B;fillColor=#FFFFFF;fontFamily=Arial;fontSize=17;fontColor=#172B4D;strokeColor=none;fillColor=none;fontFamily=Courier New;fontStyle=1;fontSize=16;fillColor=#FFFFFF;" value="&lt;font style=&quot;font-size: 23px;&quot;&gt;survivor_word&lt;/font&gt;" vertex="1">
           <mxGeometry height="28" width="180" x="1147" y="298" as="geometry" />
         </mxCell>
-        <mxCell id="m70" parent="1" style="whiteSpace=wrap;html=1;rounded=0;strokeColor=#64748B;fillColor=#FFFFFF;fontFamily=Arial;fontSize=17;fontColor=#172B4D;strokeColor=none;fillColor=none;fontFamily=Courier New;fontStyle=1;fontSize=16;" value="&lt;font style=&quot;font-size: 22px;&quot;&gt;&lt;span style=&quot;color: rgb(76, 116, 59); font-family: Arial;&quot;&gt;Đọc tổ hợp :&amp;nbsp;&lt;/span&gt;survivor_word = survivor_mem[tb_step]&lt;/font&gt;" vertex="1">
+        <mxCell id="m70" parent="1" style="whiteSpace=wrap;html=1;rounded=0;strokeColor=#64748B;fillColor=#FFFFFF;fontFamily=Arial;fontSize=17;fontColor=#172B4D;strokeColor=none;fillColor=none;fontFamily=Courier New;fontStyle=1;fontSize=16;" value="&lt;font style=&quot;font-size: 22px;&quot;&gt;&lt;span style=&quot;color: rgb(76, 116, 59); font-family: Arial;&quot;&gt;Đọc tổ hợp :&amp;nbsp;&lt;/span&gt;survivor_word = sur_mem[tb_step]&lt;/font&gt;" vertex="1">
           <mxGeometry height="50" width="671" x="776" y="638" as="geometry" />
         </mxCell>
         <mxCell id="m71" parent="1" style="whiteSpace=wrap;html=1;rounded=0;strokeColor=#64748B;fillColor=#FFFFFF;fontFamily=Arial;fontSize=17;fontColor=#172B4D;fillColor=#F0F5FA;strokeColor=#BDCFDE;fontSize=18;" value="&lt;font style=&quot;font-size: 23px;&quot;&gt;D[j,s]: decision bit của trạng thái s tại bước trellis t = j + 1. Mỗi ô lưu 1 bit.&lt;/font&gt;" vertex="1">
@@ -3731,61 +3731,54 @@
     </mxGraphModel>
   </diagram>
   <diagram id="gRrNaXTink9Oyqaj96je" name="survivor_mem">
-    <mxGraphModel dx="1406" dy="860" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1715" dy="1049" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="box_sm" parent="1" style="swimlane;whiteSpace=wrap;html=1;fillColor=#F4F8FD;strokeColor=#6C8EBF;strokeWidth=2.5;fontStyle=1;fontSize=23;startSize=48;rounded=1;" value="survivor_mem" vertex="1">
-          <mxGeometry height="520" width="790" x="280" y="30" as="geometry" />
+          <mxGeometry height="450" width="790" x="280" y="30" as="geometry" />
         </mxCell>
-        <mxCell id="dec_wr" parent="box_sm" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;strokeWidth=2.5;fontSize=23;" value="&lt;b&gt;Decoder 3:8 + AND&lt;/b&gt;" vertex="1">
-          <mxGeometry height="120" width="250" x="25" y="100" as="geometry" />
-        </mxCell>
-        <mxCell id="mem_arr" parent="box_sm" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=2.5;fontSize=23;" value="&lt;b&gt;Mảng survivor_mem [0:7]&lt;/b&gt;" vertex="1">
-          <mxGeometry height="130" width="370" x="194" y="260" as="geometry" />
+        <mxCell id="mem_arr" parent="box_sm" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=2.5;fontSize=23;" value="&lt;b&gt;Mảng sur_mem [0:7]&lt;/b&gt;" vertex="1">
+          <mxGeometry height="130" width="370" x="140" y="165" as="geometry" />
         </mxCell>
         <mxCell id="mux_rd" parent="box_sm" style="shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;html=1;fixedSize=1;rotation=90;fillColor=#D5E8D4;strokeColor=#82B366;strokeWidth=2.5;fontSize=23;horizontal=0;" value="&lt;b&gt;MUX 8:1&lt;/b&gt;" vertex="1">
-          <mxGeometry height="90" width="150" x="629" y="280" as="geometry" />
-        </mxCell>
-        <mxCell id="e_we8" edge="1" parent="box_sm" source="dec_wr" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;dashed=1;strokeColor=#7B1FA2;fontColor=#6A1B9A;fontStyle=1;fontSize=23;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="mem_arr" value="wr_en">
-          <mxGeometry relative="1" x="-0.4634" y="20" as="geometry">
-            <mxPoint as="offset" />
-            <Array as="points">
-              <mxPoint x="380" y="160" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="oJmCD855uu49fUersuA9-1" connectable="0" parent="e_we8" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];inheritText=1;fontSize=23;fontColor=#6A1B9A;fontStyle=1;" value="8" vertex="1">
-          <mxGeometry relative="1" x="0.4677" as="geometry">
-            <mxPoint as="offset" />
-          </mxGeometry>
+          <mxGeometry height="90" width="150" x="610" y="185" as="geometry" />
         </mxCell>
         <mxCell id="e_mem_mux" edge="1" parent="box_sm" source="mem_arr" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2.5;fontStyle=1;fontSize=23;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="mux_rd" value="8 × 4">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="in_fstep" parent="1" style="text;html=1;align=right;verticalAlign=middle;fontSize=23;fontColor=#6A1B9A;" value="&lt;b&gt;fwd_step&lt;/b&gt;" vertex="1">
-          <mxGeometry height="40" width="150" x="100" y="140" as="geometry" />
-        </mxCell>
         <mxCell id="in_swe" parent="1" style="text;html=1;align=right;verticalAlign=middle;fontSize=23;fontColor=#6A1B9A;" value="&lt;b&gt;survivor_we&lt;/b&gt;" vertex="1">
-          <mxGeometry height="40" width="170" x="85" y="200" as="geometry" />
+          <mxGeometry height="40" width="170" x="85" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="in_fstep" parent="1" style="text;html=1;align=right;verticalAlign=middle;fontSize=23;fontColor=#6A1B9A;" value="&lt;b&gt;fwd_step&lt;/b&gt;" vertex="1">
+          <mxGeometry height="40" width="150" x="105" y="140" as="geometry" />
         </mxCell>
         <mxCell id="in_dvec" parent="1" style="text;html=1;align=right;verticalAlign=middle;fontSize=23;" value="&lt;b&gt;decision_vec&lt;/b&gt;" vertex="1">
-          <mxGeometry height="40" width="175" x="75" y="335" as="geometry" />
+          <mxGeometry height="40" width="175" x="80" y="240" as="geometry" />
         </mxCell>
         <mxCell id="in_cr" parent="1" style="text;html=1;align=right;verticalAlign=middle;fontSize=23;fontColor=#6A1B9A;" value="&lt;b&gt;clk, rstn&lt;/b&gt;" vertex="1">
-          <mxGeometry height="40" width="140" x="105" y="440" as="geometry" />
+          <mxGeometry height="40" width="140" x="115" y="360" as="geometry" />
         </mxCell>
         <mxCell id="in_tstep" parent="1" style="text;html=1;align=right;verticalAlign=middle;fontSize=23;fontColor=#6A1B9A;" value="&lt;b&gt;tb_step&lt;/b&gt;" vertex="1">
-          <mxGeometry height="40" width="140" x="80" y="502.5" as="geometry" />
+          <mxGeometry height="40" width="140" x="115" y="420" as="geometry" />
         </mxCell>
         <mxCell id="out_sword" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=23;" value="&lt;b&gt;survivor_word&lt;/b&gt;" vertex="1">
-          <mxGeometry height="40" width="190" x="1094" y="335" as="geometry" />
+          <mxGeometry height="40" width="190" x="1094" y="240" as="geometry" />
         </mxCell>
-        <mxCell id="e_fstep" edge="1" parent="1" source="in_fstep" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;dashed=1;strokeColor=#7B1FA2;fontColor=#6A1B9A;fontStyle=1;fontSize=23;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" target="dec_wr" value="3">
-          <mxGeometry relative="1" as="geometry" />
+        <mxCell id="e_swe" edge="1" parent="1" source="in_swe" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;dashed=1;strokeColor=#7B1FA2;fontSize=23;entryX=0.65;entryY=0;entryDx=0;entryDy=0;" target="mem_arr" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="660" y="115" />
+            </Array>
+          </mxGeometry>
         </mxCell>
-        <mxCell id="e_swe" edge="1" parent="1" source="in_swe" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;dashed=1;strokeColor=#7B1FA2;entryX=0;entryY=0.75;entryDx=0;entryDy=0;fontSize=23;" target="dec_wr" value="">
-          <mxGeometry relative="1" as="geometry" />
+        <mxCell id="e_fstep" edge="1" parent="1" source="in_fstep" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;dashed=1;strokeColor=#7B1FA2;fontColor=#6A1B9A;fontStyle=1;fontSize=23;entryX=0.3;entryY=0;entryDx=0;entryDy=0;" target="mem_arr" value="3">
+          <mxGeometry relative="1" x="-0.2" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="531" y="160" />
+            </Array>
+          </mxGeometry>
         </mxCell>
         <mxCell id="e_dvec" edge="1" parent="1" source="in_dvec" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2.5;fontStyle=1;fontSize=23;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="mem_arr" value="4">
           <mxGeometry relative="1" as="geometry" />
@@ -3793,24 +3786,23 @@
         <mxCell id="e_out" edge="1" parent="1" source="mux_rd" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2.5;fontStyle=1;fontSize=23;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" target="out_sword" value="4">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e_cr" edge="1" parent="1" source="in_cr" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;dashed=1;strokeColor=#7B1FA2;fontColor=#6A1B9A;fontSize=23;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="mem_arr" value="clk, rstn">
-          <mxGeometry relative="1" x="0.4926" as="geometry">
-            <mxPoint as="offset" />
+        <mxCell id="e_cr" edge="1" parent="1" source="in_cr" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;dashed=1;strokeColor=#7B1FA2;fontColor=#6A1B9A;fontSize=23;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="mem_arr" value="">
+          <mxGeometry relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="150" y="460" />
-              <mxPoint x="660" y="460" />
+              <mxPoint x="605" y="380" />
             </Array>
-            <mxPoint x="880" y="380" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="e_tstep" edge="1" parent="1" source="in_tstep" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;dashed=1;strokeColor=#7B1FA2;fontColor=#6A1B9A;fontStyle=1;fontSize=23;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="mux_rd" value="3">
-          <mxGeometry relative="1" x="0.4852" as="geometry">
+          <mxGeometry relative="1" x="0.2" as="geometry">
             <mxPoint as="offset" />
-            <mxPoint x="1200" y="197.5" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="965" y="440" />
+            </Array>
           </mxGeometry>
         </mxCell>
         <mxCell id="note_sm" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=23;fontColor=#555555;" value="&lt;i&gt;Nét liền: dữ liệu • Nét đứt tím: điều khiển, địa chỉ &amp;amp; clock/reset&lt;/i&gt;" vertex="1">
-          <mxGeometry height="35" width="980" x="300" y="570" as="geometry" />
+          <mxGeometry height="35" width="980" x="300" y="500" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
