@@ -29,9 +29,9 @@
     text: [
       'tspan',
       ['tspan', {x: '35%', dy: '-2.4em', 'text-anchor': 'middle'},
-        'Dk={D[k,11],D[k,10],D[k,01],D[k,00]}; ghi đồng bộ survivor_mem[fwd_step]=decision_vec'],
+        'Dk={D[k,11],D[k,10],D[k,01],D[k,00]}; ghi đồng bộ sur_mem[fwd_step]=decision_vec'],
   	  ['tspan', {x: '35%', dy: '1.5em', 'text-anchor': 'middle'},
-        'đọc tổ hợp survivor_mem[tb_step]; rstn=0 chỉ khóa ghi.'],
+        'đọc tổ hợp sur_mem[tb_step]; rstn=0 chỉ khóa ghi.'],
     ]
   },
 
