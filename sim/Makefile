@@ -62,5 +62,5 @@ cov:
 	vlib $(RUN_DIR)/work_cov
 	vlog +cover=sbceft -timescale "1ns/1ps" -work $(RUN_DIR)/work_cov -f $(FILELIST) > $(RUN_DIR)/build_cov.log 2>&1
 	vsim -c -coverage -work $(RUN_DIR)/work_cov $(TB) -do "coverage save -onexit $(RUN_DIR)/cov.ucdb; run -all; quit -f" | tee $(RUN_DIR)/sim_cov.log
-	vcover report -details -codeAll -instance /$(TB)/dut $(RUN_DIR)/cov.ucdb > $(RUN_DIR)/cov_report.txt
-	vcover report -html -htmldir $(RUN_DIR)/cov_html -details -codeAll -instance /$(TB)/dut $(RUN_DIR)/cov.ucdb
+	MSYS_NO_PATHCONV=1 vcover report -details -codeAll -instance=/$(TB)/dut $(RUN_DIR)/cov.ucdb > $(RUN_DIR)/cov_report.txt
+	MSYS_NO_PATHCONV=1 vcover report -html -output $(RUN_DIR)/cov_html -details -codeAll -instance=/$(TB)/dut $(RUN_DIR)/cov.ucdb
