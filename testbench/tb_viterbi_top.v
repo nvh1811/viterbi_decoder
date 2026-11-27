@@ -1,6 +1,6 @@
 // =============================================================================
-// File        : tb_viterbi_decoder.v
-// Module      : tb_viterbi_decoder (Top-level Testbench)
+// File        : tb_viterbi_top.v
+// Module      : tb_viterbi_top (Top-level Testbench)
 // Project     : Bộ giải mã Viterbi (K=3, R=1/2) — Nhóm 9 VLSI
 // Task        : VT-020d (Phụ trách: Vũ Nguyễn Đăng Nhật)
 // Tham chiếu  : Verification Plan (TC-05 .. TC-12) — BTL_Nhóm 9_VLSI
@@ -12,7 +12,7 @@
 
 `timescale 1ns / 1ps
 
-module tb_viterbi_decoder;
+module tb_viterbi_top;
 
     // Tham số kiểm thử
     localparam NUM_VECTORS = 1025;
@@ -33,7 +33,7 @@ module tb_viterbi_decoder;
     integer i;
     integer error_count;
     // Khởi tạo DUT (Top-level module)
-    viterbi_decoder dut (
+    viterbi_top dut (
         .clk      (clk),
         .rst_n    (rst_n),
         .start    (start),
