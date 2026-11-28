@@ -1,149 +1,147 @@
-// =============================================================================
-// File        : tb_traceback.v
-// Module      : tb_traceback
-// Project     : Bộ giải mã Viterbi (K=3, R=1/2) — Nhóm 9 VLSI
-// Task        : VT-020c (Phụ trách: Nguyễn Đình Tuyển)
-// Tham chiếu  : Mục 9.5 (Bảng 23), N08, N09, TC-04 — BTL_Nhóm 9_VLSI
-// =============================================================================
-
-`timescale 1ns / 1ps
+`timescale 1ns/1ps
 
 module tb_trb;
-
-    // Tín hiệu kết nối DUT
     reg         clk;
-    reg         rst_n;
-    reg  [19:0] pm_bus;
-    reg  [3:0]  survivor_word;
-    reg  [2:0]  tb_step;
-    reg         select_en;
-    reg         tb_en;
-    reg         out_en;
-    wire [7:0]  data_out;
+    reg         rstn;
+    reg  [19:0] met_upd_pm;
+    reg  [3:0]  sur_mem_word;
+    reg  [2:0]  ctrl_tb_cnt;
+    reg         ctrl_sel_flag;
+    reg         ctrl_tb_en;
+    reg         ctrl_out_flag;
+    wire [7:0]  output_data;
 
-    integer i;
-    reg [3:0] mock_sur_mem [0:7];
+    integer err_cnt;
+    integer step;
+    reg [3:0] sur_rom [0:7];
 
-    // Khởi tạo DUT
-    traceback dut (
+    trb dut (
         .clk           (clk),
-        .rst_n         (rst_n),
-        .pm_bus        (pm_bus),
-        .survivor_word (survivor_word),
-        .tb_step       (tb_step),
-        .select_en     (select_en),
-        .tb_en         (tb_en),
-        .out_en        (out_en),
-        .data_out      (data_out)
+        .rstn          (rstn),
+        .met_upd_pm    (met_upd_pm),
+        .sur_mem_word  (sur_mem_word),
+        .ctrl_tb_cnt   (ctrl_tb_cnt),
+        .ctrl_sel_flag (ctrl_sel_flag),
+        .ctrl_tb_en    (ctrl_tb_en),
+        .ctrl_out_flag (ctrl_out_flag),
+        .output_data   (output_data)
     );
 
-    // Tạo xung nhịp clock (chu kỳ 5ns)
     initial clk = 1'b0;
-    always #2.5 clk = ~clk;
+    always #5 clk = ~clk;
+
+    task test_select_tie;
+        input [19:0] pm_vec;
+        input [1:0]  exp_st;
+        input [255:0] msg;
+        begin
+            @(negedge clk);
+            met_upd_pm    = pm_vec;
+            ctrl_sel_flag = 1'b1;
+            @(posedge clk);
+            #1;
+            ctrl_sel_flag = 1'b0;
+            if (dut.tb_st !== exp_st) begin
+                $display("[FAIL] %0s | exp_st=%b, got=%b", msg, exp_st, dut.tb_st);
+                err_cnt = err_cnt + 1;
+            end else begin
+                $display("[PASS] %0s | tb_st=%b", msg, dut.tb_st);
+            end
+        end
+    endtask
 
     initial begin
-        $display("=== BAT DAU MO PHONG: tb_traceback (VT-020c - N08, N09, TC-04) ===");
-        rst_n         = 1'b0;
-        pm_bus        = 20'd0;
-        survivor_word = 4'd0;
-        tb_step       = 3'd7;
-        select_en     = 1'b0;
-        tb_en         = 1'b0;
-        out_en        = 1'b0;
+        $display("=== BAT DAU MO PHONG: tb_trb (VT-023 | TC-04 & TC-13) ===");
+        err_cnt       = 0;
+        rstn          = 1'b0;
+        met_upd_pm    = 20'd0;
+        sur_mem_word  = 4'd0;
+        ctrl_tb_cnt   = 3'd0;
+        ctrl_sel_flag = 1'b0;
+        ctrl_tb_en    = 1'b0;
+        ctrl_out_flag = 1'b0;
 
-        // 1. Kiểm tra reset bất đồng bộ xóa data_out về 0
-        #2;
-        if (data_out !== 8'h00)
-            $display("[FAIL] Reset: data_out = %h (Mong doi: 00)", data_out);
-        else
-            $display("[PASS] Reset: data_out = 00");
-
-        @(negedge clk);
-        rst_n = 1'b1;
-
-        // 2. N08 & N09: Kiểm tra chọn PM nhỏ nhất và 8 bước truy vết (Bản tin gốc: 8'b10110010 = 8'hB2)
-        mock_sur_mem[0] = 4'b0000;
-        mock_sur_mem[1] = 4'b0000;
-        mock_sur_mem[2] = 4'b0100;
-        mock_sur_mem[3] = 4'b0000;
-        mock_sur_mem[4] = 4'b0010;
-        mock_sur_mem[5] = 4'b0001;
-        mock_sur_mem[6] = 4'b0000;
-        mock_sur_mem[7] = 4'b0000;
-
-        // Cấp PM cuối: PM01 = 2 (nhỏ nhất) -> start state = 01
-        @(negedge clk);
-        pm_bus    = {5'd8, 5'd6, 5'd2, 5'd5};
-        select_en = 1'b1;
+        // 1. TC-13: Reset
         @(posedge clk);
         #1;
-        select_en = 1'b0;
-        $display("[INFO] N08 - Chon trang thai bat dau truy vet (PM01=2 nho nhat)");
-
-        // Thực hiện 8 bước TRACEBACK (tb_step = 7..0)
-        for (i = 7; i >= 0; i = i - 1) begin
-            @(negedge clk);
-            tb_step       = i[2:0];
-            survivor_word = mock_sur_mem[i];
-            tb_en         = 1'b1;
-            @(posedge clk);
-            #1;
-            if (data_out !== 8'h00)
-                $display("[FAIL] N09 - data_out bi thay doi som tai buoc tb_step=%0d", i);
+        if (output_data !== 8'd0 || dut.tb_st !== 2'b00 || dut.work_reg !== 8'd0) begin
+            $display("[FAIL] Reset: Thanh ghi chua ve 0");
+            err_cnt = err_cnt + 1;
+        end else begin
+            $display("[PASS] TC-13: Reset tb_st, work_reg, output_data ve 0");
         end
-        tb_en = 1'b0;
-
-        // Chốt kết quả ra data_out khi out_en = 1
-        @(negedge clk);
-        out_en = 1'b1;
-        @(posedge clk);
-        #1;
-        out_en = 1'b0;
-
-        if (data_out !== 8'b10110010)
-            $display("[FAIL] N09 - Ket qua giai ma: data_out=%b (Mong doi: 10110010)", data_out);
-        else
-            $display("[PASS] N09 - Ket qua giai ma chinh xac: data_out=%b (8'h%h)", data_out, data_out);
-
-        // 3. TC-04: Kiểm tra quy tắc phá hòa chọn PM cuối (Ưu tiên 00 -> 01 -> 10 -> 11)
-        for (i = 0; i < 8; i = i + 1) mock_sur_mem[i] = 4'b0000;
 
         @(negedge clk);
-        pm_bus    = {5'd4, 5'd4, 5'd4, 5'd4}; // 4 PM bằng nhau -> ưu tiên chọn 00
-        select_en = 1'b1;
+        rstn = 1'b1;
+
+        // 2. TC-04 & Phu luc A.2: Kiem tra quy tac uu tien hoa (00 -> 01 -> 10 -> 11)
+        // Gom ca 4 cap hoa dac biet khong xuat hien o top: 00-01, 00-11, 01-10, 10-11
+        // Dinh dang: {pm11, pm10, pm01, pm00}
+        test_select_tie({5'd3, 5'd3, 5'd3, 5'd3}, 2'b00, "Hoa 4 state (00-01-10-11) -> chon 00");
+        test_select_tie({5'd7, 5'd6, 5'd2, 5'd2}, 2'b00, "Hoa 2 state dac biet (00-01) -> chon 00");
+        test_select_tie({5'd2, 5'd6, 5'd7, 5'd2}, 2'b00, "Hoa 2 state dac biet (00-11) -> chon 00");
+        test_select_tie({5'd7, 5'd2, 5'd2, 5'd6}, 2'b01, "Hoa 2 state dac biet (01-10) -> chon 01");
+        test_select_tie({5'd4, 5'd4, 5'd4, 5'd8}, 2'b01, "Hoa 3 state (01-10-11) -> chon 01");
+        test_select_tie({5'd5, 5'd5, 5'd9, 5'd9}, 2'b10, "Hoa 2 state dac biet (10-11) -> chon 10");
+        test_select_tie({5'd2, 5'd7, 5'd7, 5'd7}, 2'b11, "State 11 nho nhat -> chon 11");
+
+        // 3. TC-13: Giu nguyen thanh ghi khi cac enable = 0
         @(posedge clk);
         #1;
-        select_en = 1'b0;
-
-        for (i = 7; i >= 0; i = i - 1) begin
-            @(negedge clk);
-            tb_step       = i[2:0];
-            survivor_word = mock_sur_mem[i];
-            tb_en         = 1'b1;
-            @(posedge clk);
-            #1;
+        if (dut.tb_st !== 2'b11) begin
+            $display("[FAIL] TC-13: Giu nguyen trang thai khi enable=0");
+            err_cnt = err_cnt + 1;
+        end else begin
+            $display("[PASS] TC-13: Giu nguyen thanh ghi khi cac enable=0");
         end
-        tb_en = 1'b0;
 
-        if (data_out !== 8'b10110010)
-            $display("[FAIL] TC-04 - Khong giu ket qua cu truoc khi out_en=1");
-        else
-            $display("[PASS] TC-04 - Giu nguyen ket qua cu (%b) trong khi xu ly khung moi", data_out);
+        // 4. TC-04 & TC-13: Chu trinh SELECT -> TRACEBACK (8 buoc) -> DONE -> Ban tin: 8'hB6
+        sur_rom[7] = 4'b0100; // S8=10 (1), dec=sur[2]=1 -> S7=01
+        sur_rom[6] = 4'b0010; // S7=01 (0), dec=sur[1]=1 -> S6=11
+        sur_rom[5] = 4'b0000; // S6=11 (1), dec=sur[3]=0 -> S5=10
+        sur_rom[4] = 4'b0100; // S5=10 (1), dec=sur[2]=1 -> S4=01
+        sur_rom[3] = 4'b0010; // S4=01 (0), dec=sur[1]=1 -> S3=11
+        sur_rom[2] = 4'b0000; // S3=11 (1), dec=sur[3]=0 -> S2=10
+        sur_rom[1] = 4'b0000; // S2=10 (1), dec=sur[2]=0 -> S1=00
+        sur_rom[0] = 4'b0000; // S1=00 (0), dec=sur[0]=0 -> S0=00
 
+        // SELECT
         @(negedge clk);
-        out_en = 1'b1;
+        met_upd_pm    = {5'd9, 5'd1, 5'd5, 5'd4};
+        ctrl_sel_flag = 1'b1;
         @(posedge clk);
         #1;
-        out_en = 1'b0;
+        ctrl_sel_flag = 1'b0;
+        $display("[INFO] SELECT: Chon trang thai bat dau truy vet tb_st=%b", dut.tb_st);
 
-        if (data_out !== 8'b00000000)
-            $display("[FAIL] TC-04 - Pha hoa chon PM: data_out=%b (Mong doi: 00000000)", data_out);
+        // TRACEBACK 8 buoc
+        for (step = 7; step >= 0; step = step - 1) begin
+            @(negedge clk);
+            ctrl_tb_en   = 1'b1;
+            ctrl_tb_cnt  = step[2:0];
+            sur_mem_word = sur_rom[step];
+            @(posedge clk);
+        end
+        @(negedge clk);
+        ctrl_tb_en = 1'b0;
+
+        // DONE
+        ctrl_out_flag = 1'b1;
+        @(posedge clk);
+        #1;
+        ctrl_out_flag = 1'b0;
+        if (output_data !== 8'hB6 || dut.tb_st !== 2'b00) begin
+            $display("[FAIL] DONE: exp output_data=8'hB6 (got %h), tb_st=00 (got %b)",
+                     output_data, dut.tb_st);
+            err_cnt = err_cnt + 1;
+        end else begin
+            $display("[PASS] DONE: Khoi phuc chinh xac output_data=8'hB6 va lui ve state 00");
+        end
+
+        if (err_cnt == 0)
+            $display("=== KET QUA tb_trb: PASS 100%% (0 loi) ===");
         else
-            $display("[PASS] TC-04 - Pha hoa uu tien 00 chinh xac: data_out=%b", data_out);
-
-        #50;
-        $display("=== KET THUC MO PHONG: tb_traceback ===");
+            $display("=== KET QUA tb_trb: FAIL (%0d loi) ===", err_cnt);
         $finish;
     end
-
 endmodule

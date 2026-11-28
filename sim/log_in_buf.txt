@@ -1,0 +1,47 @@
+# ** Note: (vsim-220) 'C:/altera_lite/25.1std/questa_fse/win64/../modelsim.ini' is used as the ini file.
+# vsim -coverage -onfinish stop -voptargs=""+acc"" work.tb_in_buf -l sim/log_in_buf.txt 
+# Start time: 14:11:46 on Nov 28,2026
+# ** Note: (vsim-3812) Design is being optimized...
+# ** Warning: (vopt-10908) Some optimizations are turned off because the +acc switch is in effect.
+# ** Note: (vopt-220) 'C:/altera_lite/25.1std/questa_fse/win64/../modelsim.ini' is used as the ini file.
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=1.
+# Loading work.tb_in_buf(fast)
+# Loading work.in_buf(fast)
+add wave -r /*
+configure wave -signalnamewidth 1
+run -all
+# === BAT DAU MO PHONG: tb_in_buf (VT-021 | TC-01 & TC-13) ===
+# [PASS] n rstn=0 bo qua ctrl_load_flag=1 | met_upd_rx=00
+# [PASS] n frm_reg=0 khi ctrl_load_flag=0 | met_upd_rx=00
+# [PASS] frm_reg chot thanh cong khung 0xa55a
+# [PASS] it dung thu tu tu trai sang phai | met_upd_rx=10
+# [PASS] it dung thu tu tu trai sang phai | met_upd_rx=10
+# [PASS] it dung thu tu tu trai sang phai | met_upd_rx=01
+# [PASS] it dung thu tu tu trai sang phai | met_upd_rx=01
+# [PASS] it dung thu tu tu trai sang phai | met_upd_rx=01
+# [PASS] it dung thu tu tu trai sang phai | met_upd_rx=01
+# [PASS] it dung thu tu tu trai sang phai | met_upd_rx=10
+# [PASS] it dung thu tu tu trai sang phai | met_upd_rx=10
+# [PASS] frm_reg chot thanh cong khung 0xf00f
+# [PASS] it dung thu tu tu trai sang phai | met_upd_rx=11
+# [PASS] it dung thu tu tu trai sang phai | met_upd_rx=11
+# [PASS] it dung thu tu tu trai sang phai | met_upd_rx=00
+# [PASS] it dung thu tu tu trai sang phai | met_upd_rx=00
+# [PASS] it dung thu tu tu trai sang phai | met_upd_rx=00
+# [PASS] it dung thu tu tu trai sang phai | met_upd_rx=00
+# [PASS] it dung thu tu tu trai sang phai | met_upd_rx=11
+# [PASS] it dung thu tu tu trai sang phai | met_upd_rx=11
+# [PASS] t dong bo xoa frm_reg giua chung | met_upd_rx=00
+# === KET QUA tb_in_buf: PASS 100% (0 loi) ===
+# ** Note: $finish    : testbench/tb_in_buf.v(104)
+#    Time: 208 ns  Iteration: 0  Instance: /tb_in_buf
+# Break in Module tb_in_buf at testbench/tb_in_buf.v line 104
+wave zoom full
+# {0 ps} {218400 ps}
+coverage save sim/cov_in_buf.ucdb
+wave zoom full
+# {0 ps} {218400 ps}
+quit -sim
+# End time: 14:13:49 on Nov 28,2026, Elapsed time: 0:02:03
+# Errors: 0, Warnings: 1
+vsim -coverage -onfinish stop -voptargs="+acc" work.tb_trb -l sim/log_trb.txt

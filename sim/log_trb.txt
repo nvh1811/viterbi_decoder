@@ -1,0 +1,31 @@
+# ** Note: (vsim-220) 'C:/altera_lite/25.1std/questa_fse/win64/../modelsim.ini' is used as the ini file.
+# vsim -coverage -onfinish stop -voptargs=""+acc"" work.tb_trb -l sim/log_trb.txt 
+# Start time: 14:13:57 on Nov 28,2026
+# ** Note: (vsim-3813) Design is being optimized due to module recompilation...
+# ** Warning: (vopt-10908) Some optimizations are turned off because the +acc switch is in effect.
+# ** Note: (vopt-220) 'C:/altera_lite/25.1std/questa_fse/win64/../modelsim.ini' is used as the ini file.
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=1.
+# Loading work.tb_trb(fast)
+# Loading work.trb(fast)
+add wave -r /*
+configure wave -signalnamewidth 1
+run -all
+# === BAT DAU MO PHONG: tb_trb (VT-023 | TC-04 & TC-13) ===
+# [PASS] TC-13: Reset tb_st, work_reg, output_data ve 0
+# [PASS] 4 state (00-01-10-11) -> chon 00 | tb_st=00
+# [PASS] tate dac biet (00-01) -> chon 00 | tb_st=00
+# [PASS] tate dac biet (00-11) -> chon 00 | tb_st=00
+# [PASS] tate dac biet (01-10) -> chon 01 | tb_st=01
+# [PASS] oa 3 state (01-10-11) -> chon 01 | tb_st=01
+# [PASS] tate dac biet (10-11) -> chon 10 | tb_st=10
+# [PASS] State 11 nho nhat -> chon 11 | tb_st=11
+# [PASS] TC-13: Giu nguyen thanh ghi khi cac enable=0
+# [INFO] SELECT: Chon trang thai bat dau truy vet tb_st=10
+# [FAIL] DONE: exp output_data=8'hB6 (got 6d), tb_st=00 (got 00)
+# === KET QUA tb_trb: FAIL (1 loi) ===
+# ** Note: $finish    : testbench/tb_trb.v(145)
+#    Time: 196 ns  Iteration: 0  Instance: /tb_trb
+# Break in Module tb_trb at testbench/tb_trb.v line 145
+wave zoom full
+# {0 ps} {205800 ps}
+coverage save sim/cov_trb.ucdb

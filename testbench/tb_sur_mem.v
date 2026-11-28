@@ -1,118 +1,90 @@
-// =============================================================================
-// File        : tb_survivor_mem.v
-// Module      : tb_survivor_mem
-// Project     : Bộ giải mã Viterbi (K=3, R=1/2) — Nhóm 9 VLSI
-// Task        : VT-020c (Phụ trách: Nguyễn Đình Tuyển)
-// Tham chiếu  : Mục 9.4 (Bảng 22), N07 — Verification Plan BTL_Nhóm 9_VLSI
-// =============================================================================
-
-`timescale 1ns / 1ps
+`timescale 1ns/1ps
 
 module tb_sur_mem;
-
-    // Tín hiệu kết nối DUT
     reg        clk;
-    reg        rst_n;
-    reg        survivor_we;
-    reg  [2:0] fwd_step;
-    reg  [3:0] decision_vec;
-    reg  [2:0] tb_step;
-    wire [3:0] survivor_word;
+    reg        rstn;
+    reg        ctrl_we;
+    reg  [2:0] ctrl_fwd_cnt;
+    reg  [3:0] met_upd_dec;
+    reg  [2:0] ctrl_tb_cnt;
+    wire [3:0] trb_word;
 
+    integer err_cnt;
     integer i;
-    reg [3:0] test_data [0:7];
+    reg [3:0] exp_mem [0:7];
 
-    // Khởi tạo DUT
-    survivor_mem dut (
-        .clk           (clk),
-        .rst_n         (rst_n),
-        .survivor_we   (survivor_we),
-        .fwd_step      (fwd_step),
-        .decision_vec  (decision_vec),
-        .tb_step       (tb_step),
-        .survivor_word (survivor_word)
+    sur_mem dut (
+        .clk          (clk),
+        .rstn         (rstn),
+        .ctrl_we      (ctrl_we),
+        .ctrl_fwd_cnt (ctrl_fwd_cnt),
+        .met_upd_dec  (met_upd_dec),
+        .ctrl_tb_cnt  (ctrl_tb_cnt),
+        .trb_word     (trb_word)
     );
 
-    // Tạo xung nhịp clock (chu kỳ 5ns)
     initial clk = 1'b0;
-    always #2.5 clk = ~clk;
+    always #5 clk = ~clk;
 
     initial begin
-        $display("=== BAT DAU MO PHONG: tb_survivor_mem (VT-020c - N07) ===");
+        $display("=== BAT DAU MO PHONG: tb_sur_mem (VT-023) ===");
+        err_cnt      = 0;
+        rstn         = 1'b0;
+        ctrl_we      = 1'b1; // Thu bat we luc rstn=0 de phu nhanh if (rstn)
+        ctrl_fwd_cnt = 3'd0;
+        met_upd_dec  = 4'hF;
+        ctrl_tb_cnt  = 3'd0;
 
-        test_data[0] = 4'b0001;
-        test_data[1] = 4'b1010;
-        test_data[2] = 4'b0110;
-        test_data[3] = 4'b1100;
-        test_data[4] = 4'b0011;
-        test_data[5] = 4'b1001;
-        test_data[6] = 4'b0101;
-        test_data[7] = 4'b1111;
+        // 1. Kiem tra khoa ghi khi rstn = 0
+        @(posedge clk);
+        #1;
+        if (trb_word === 4'hF) begin
+            $display("[FAIL] Reset (rstn=0): Khong duoc ghi du lieu moi khi reset");
+            err_cnt = err_cnt + 1;
+        end else begin
+            $display("[PASS] Reset (rstn=0): Khoa ghi du lieu thanh cong");
+        end
 
-        rst_n        = 1'b0;
-        survivor_we  = 1'b0;
-        fwd_step     = 3'd0;
-        decision_vec = 4'b0000;
-        tb_step      = 3'd0;
-
-        // 1. Ghi đồng bộ 8 hàng (fwd_step = 0..7) khi rst_n = 1, survivor_we = 1
+        // 2. Ghi dong bo 8 hang (ctrl_fwd_cnt = 0..7)
         @(negedge clk);
-        rst_n = 1'b1;
+        rstn    = 1'b1;
+        ctrl_we = 1'b1;
         for (i = 0; i < 8; i = i + 1) begin
-            @(negedge clk);
-            survivor_we  = 1'b1;
-            fwd_step     = i[2:0];
-            decision_vec = test_data[i];
+            ctrl_fwd_cnt = i[2:0];
+            met_upd_dec  = (4'hA + i[3:0]); // Mau du lieu khac nhau cho tung hang
+            exp_mem[i]   = (4'hA + i[3:0]);
             @(posedge clk);
             #1;
         end
-        survivor_we = 1'b0;
-        $display("[INFO] N07 - Da ghi dong bo 8 hang (fwd_step = 0..7)");
+        $display("[INFO] Da ghi dong bo 8 hang (ctrl_fwd_cnt = 0..7)");
 
-        // 2. Đọc tổ hợp survivor_word theo tb_step = 7..0
+        // 3. Tat ctrl_we=0, thu ghi de va reset giua chung de kiem tra bao toan du lieu
+        @(negedge clk);
+        ctrl_we      = 1'b0;
+        ctrl_fwd_cnt = 3'd3;
+        met_upd_dec  = 4'h0;
+        @(posedge clk);
+
+        rstn = 1'b0; // Reset khong xoa mang 32 bit
+        @(posedge clk);
+        rstn = 1'b1;
+
+        // 4. Doc to hop nguoc tu hang 7 ve hang 0 (ctrl_tb_cnt = 7..0)
         for (i = 7; i >= 0; i = i - 1) begin
-            tb_step = i[2:0];
-            #1;
-            if (survivor_word !== test_data[i])
-                $display("[FAIL] N07 - Doc hang %0d: survivor_word=%b (Mong doi: %b)", 
-                         i, survivor_word, test_data[i]);
-            else
-                $display("[PASS] N07 - Doc to hop hang %0d: survivor_word=%b", 
-                         i, survivor_word);
+            ctrl_tb_cnt = i[2:0];
+            #2; // Doc to hop khong can doi clock
+            if (trb_word !== exp_mem[i]) begin
+                $display("[FAIL] Hang %0d: exp=%h, got=%h", i, exp_mem[i], trb_word);
+                err_cnt = err_cnt + 1;
+            end else begin
+                $display("[PASS] Doc to hop hang %0d dung: trb_word=%h", i, trb_word);
+            end
         end
 
-        // 3. Kiểm tra không ghi đè khi survivor_we = 0
-        @(negedge clk);
-        survivor_we  = 1'b0;
-        fwd_step     = 3'd3;
-        decision_vec = 4'b0000;
-        @(posedge clk);
-        #1;
-        tb_step = 3'd3;
-        #1;
-        if (survivor_word !== test_data[3])
-            $display("[FAIL] Ghi de khi survivor_we=0: hang 3 bi doi thanh %b", survivor_word);
+        if (err_cnt == 0)
+            $display("=== KET QUA tb_sur_mem: PASS 100%% (0 loi) ===");
         else
-            $display("[PASS] Giu nguyen du lieu khi survivor_we=0");
-
-        // 4. Kiểm tra khóa ghi khi rst_n = 0 và không xóa mảng đã lưu
-        @(negedge clk);
-        rst_n        = 1'b0;
-        survivor_we  = 1'b1;
-        fwd_step     = 3'd5;
-        decision_vec = 4'b0000;
-        @(posedge clk);
-        #1;
-        tb_step = 3'd5;
-        #1;
-        if (survivor_word !== test_data[5])
-            $display("[FAIL] N07 (Khoa ghi khi rst_n=0): hang 5 bi thay doi thanh %b", survivor_word);
-        else
-            $display("[PASS] N07 (Khoa ghi khi rst_n=0): Bao toan mang du lieu thanh cong");
-
-        #50;
-        $display("=== KET THUC MO PHONG: tb_survivor_mem ===");
+            $display("=== KET QUA tb_sur_mem: FAIL (%0d loi) ===", err_cnt);
         $finish;
     end
-
 endmodule

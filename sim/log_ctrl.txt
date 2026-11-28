@@ -1,0 +1,56 @@
+# ** Note: (vsim-220) 'C:/altera_lite/25.1std/questa_fse/win64/../modelsim.ini' is used as the ini file.
+# vsim -coverage -onfinish stop -voptargs=""+acc"" work.tb_ctrl -l sim/log_ctrl.txt 
+# Start time: 13:50:33 on Nov 28,2026
+# ** Note: (vsim-3812) Design is being optimized...
+# ** Warning: (vopt-10908) Some optimizations are turned off because the +acc switch is in effect.
+# ** Note: (vopt-220) 'C:/altera_lite/25.1std/questa_fse/win64/../modelsim.ini' is used as the ini file.
+# ** Note: (vopt-143) Recognized 1 FSM in module "ctrl(fast)".
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=1.
+# Loading work.tb_ctrl(fast)
+# Loading work.ctrl(fast)
+add wave -r /*
+configure wave -signalnamewidth 1
+run -all
+# === BAT DAU MO PHONG: tb_ctrl (VT-021) ===
+# [PASS]  ca enable=0 du viterbi_enable=1
+# [PASS] bi_enable=0): Giu trang thai cho
+# [PASS] le=1): Bat load_flag & init_flag
+# [PASS] ARD: Bat met_upd_en & sur_mem_we
+# [PASS] ARD: Bat met_upd_en & sur_mem_we
+# [PASS] ARD: Bat met_upd_en & sur_mem_we
+# [PASS] ARD: Bat met_upd_en & sur_mem_we
+# [PASS] ARD: Bat met_upd_en & sur_mem_we
+# [PASS] ARD: Bat met_upd_en & sur_mem_we
+# [PASS] ARD: Bat met_upd_en & sur_mem_we
+# [PASS] ARD: Bat met_upd_en & sur_mem_we
+# [PASS] SELECT: Bat trb_sel_flag
+# [PASS] TRACEBACK: Bat trb_tb_en
+# [PASS] TRACEBACK: Bat trb_tb_en
+# [PASS] TRACEBACK: Bat trb_tb_en
+# [PASS] TRACEBACK: Bat trb_tb_en
+# [PASS] TRACEBACK: Bat trb_tb_en
+# [PASS] TRACEBACK: Bat trb_tb_en
+# [PASS] TRACEBACK: Bat trb_tb_en
+# [PASS] TRACEBACK: Bat trb_tb_en
+# [PASS] E (truoc canh): Bat trb_out_flag
+# [PASS] ung output_done=1 trong 1 chu ky
+# [PASS]  ke tiep: output_done tu ha ve 0
+# [PASS] et giua chung: Huy khung ve IDLE
+# [PASS] FSM loi 101: Tat toan bo enable
+# [PASS] FSM loi 101: Phuc hoi ve IDLE
+# [PASS] FSM loi 110: Phuc hoi ve IDLE
+# [PASS] FSM loi 111: Phuc hoi ve IDLE
+# === KET QUA tb_ctrl: PASS 100% (0 loi) ===
+# ** Note: $finish    : testbench/tb_ctrl.v(156)
+#    Time: 286 ns  Iteration: 0  Instance: /tb_ctrl
+# Break in Module tb_ctrl at testbench/tb_ctrl.v line 156
+wave zoom full
+# {0 ps} {300300 ps}
+coverage save sim/cov_ctrl.ucdb
+# Paste insertion failed: quit: ** UI-Msg (Warning): (vish-4014) No objects found matching 'quit'.
+# Paste insertion failed: -sim: Unrecognized option: "-sim" ignored.
+# Missing signal name or pattern.
+quit -sim
+# End time: 13:52:48 on Nov 28,2026, Elapsed time: 0:02:15
+# Errors: 0, Warnings: 1
+vsim -coverage -onfinish stop -voptargs="+acc" work.tb_sur_mem -l sim/log_sur_mem.txt

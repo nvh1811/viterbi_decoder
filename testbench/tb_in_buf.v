@@ -1,119 +1,106 @@
-// =============================================================================
-// File        : tb_input_buffer.v
-// Module      : tb_input_buffer
-// Project     : Bộ giải mã Viterbi (K=3, R=1/2) — Nhóm 9 VLSI
-// Task        : VT-020a (Phụ trách: Nguyễn Đình Tuyển)
-// Tham chiếu  : Mục 9.1, N03, TC-01 — Verification Plan BTL_Nhóm 9_VLSI
-// =============================================================================
-
-`timescale 1ns / 1ps
+`timescale 1ns/1ps
 
 module tb_in_buf;
-
-    // Tín hiệu kết nối DUT
     reg         clk;
-    reg         rst_n;
-    reg         frame_load;
-    reg  [15:0] data_in;
-    reg  [2:0]  fwd_step;
-    wire [1:0]  rx_pair;
+    reg         rstn;
+    reg         ctrl_load_flag;
+    reg  [15:0] input_data;
+    reg  [2:0]  ctrl_fwd_cnt;
+    wire [1:0]  met_upd_rx;
 
+    integer err_cnt;
     integer i;
-    reg [15:0] test_frame;
-    reg [1:0]  exp_pair;
+    reg [1:0] exp_pair;
 
-    // Khởi tạo DUT
-    input_buffer dut (
-        .clk        (clk),
-        .rst_n      (rst_n),
-        .frame_load (frame_load),
-        .data_in    (data_in),
-        .fwd_step   (fwd_step),
-        .rx_pair    (rx_pair)
+    in_buf dut (
+        .clk            (clk),
+        .rstn           (rstn),
+        .ctrl_load_flag (ctrl_load_flag),
+        .input_data     (input_data),
+        .ctrl_fwd_cnt   (ctrl_fwd_cnt),
+        .met_upd_rx     (met_upd_rx)
     );
 
-    // Tạo xung nhịp clock (chu kỳ 5ns)
     initial clk = 1'b0;
-    always #2.5 clk = ~clk;
+    always #5 clk = ~clk;
+
+    task check_rx;
+        input [1:0] exp;
+        input [255:0] msg;
+        begin
+            #1;
+            if (met_upd_rx !== exp) begin
+                $display("[FAIL] %0s | exp=%b, got=%b", msg, exp, met_upd_rx);
+                err_cnt = err_cnt + 1;
+            end else begin
+                $display("[PASS] %0s | met_upd_rx=%b", msg, met_upd_rx);
+            end
+        end
+    endtask
+
+    task run_frame_sweep;
+        input [15:0] frame_val;
+        begin
+            @(negedge clk);
+            ctrl_load_flag = 1'b1;
+            input_data     = frame_val;
+            @(posedge clk);
+            #1;
+            ctrl_load_flag = 1'b0;
+            input_data     = 16'h0000; // Doi ben ngoai de xac nhan frm_reg da chot
+
+            if (dut.frm_reg !== frame_val) begin
+                $display("[FAIL] frm_reg chot sai: exp=%h, got=%h", frame_val, dut.frm_reg);
+                err_cnt = err_cnt + 1;
+            end else begin
+                $display("[PASS] frm_reg chot thanh cong khung 0x%h", dut.frm_reg);
+            end
+
+            for (i = 0; i < 8; i = i + 1) begin
+                ctrl_fwd_cnt = i[2:0];
+                exp_pair     = frame_val[15 - 2*i -: 2];
+                check_rx(exp_pair, "TC-01: Tach cap bit dung thu tu tu trai sang phai");
+                @(posedge clk);
+            end
+        end
+    endtask
 
     initial begin
-        $display("=== BAT DAU MO PHONG: tb_input_buffer (VT-020a - TC-01) ===");
-        rst_n      = 1'b0;
-        frame_load = 1'b0;
-        data_in    = 16'h0000;
-        fwd_step   = 3'd0;
+        $display("=== BAT DAU MO PHONG: tb_in_buf (VT-021 | TC-01 & TC-13) ===");
+        err_cnt        = 0;
+        rstn           = 1'b0;
+        ctrl_load_flag = 1'b0;
+        input_data     = 16'h0000;
+        ctrl_fwd_cnt   = 3'd0;
 
-        // 1. Kiểm tra reset bất đồng bộ xóa frame_reg về 0
+        // 1. TC-13: Uu tien reset bat dong bo > ctrl_load_flag
+        @(negedge clk);
+        ctrl_load_flag = 1'b1;
+        input_data     = 16'hABCD;
+        @(posedge clk);
+        check_rx(2'b00, "TC-13: Uu tien rstn=0 bo qua ctrl_load_flag=1");
+
+        // 2. TC-13: Nha reset, giu nguyen gia tri khi ctrl_load_flag=0
+        @(negedge clk);
+        rstn           = 1'b1;
+        ctrl_load_flag = 1'b0;
+        @(posedge clk);
+        check_rx(2'b00, "TC-13: Giu nguyen frm_reg=0 khi ctrl_load_flag=0");
+
+        // 3. TC-01: Lan luot nap 0xA55A va 0xF00F, quet ctrl_fwd_cnt 0..7
+        run_frame_sweep(16'hA55A); // Tao chuoi: 10, 10, 01, 01, 01, 01, 10, 10
+        run_frame_sweep(16'hF00F); // Tao chuoi: 11, 11, 00, 00, 00, 00, 11, 11
+
+        // 4. Reset bat dong bo giua chung
         #2;
-        if (rx_pair !== 2'b00)
-            $display("[FAIL] Reset: rx_pair = %b (Mong doi: 00)", rx_pair);
+        rstn = 1'b0;
+        ctrl_fwd_cnt = 3'd0;
+        check_rx(2'b00, "TC-13: Reset bat dong bo xoa frm_reg giua chung");
+
+        if (err_cnt == 0)
+            $display("=== KET QUA tb_in_buf: PASS 100%% (0 loi) ===");
         else
-            $display("[PASS] Reset: rx_pair = %b", rx_pair);
-
-        @(negedge clk);
-        rst_n = 1'b1;
-
-        // 2. Kiểm tra giữ nguyên khi frame_load = 0
-        data_in    = 16'hFFFF;
-        frame_load = 1'b0;
-        @(posedge clk);
-        #1;
-        if (rx_pair !== 2'b00)
-            $display("[FAIL] Giu nguyen khi frame_load=0: rx_pair = %b", rx_pair);
-        else
-            $display("[PASS] Giu nguyen gia tri khi frame_load=0");
-
-        // 3. TC-01 (Gói 1): Nạp gói 16'hA55A và quét fwd_step = 0..7
-        test_frame = 16'hA55A;
-        @(negedge clk);
-        data_in    = test_frame;
-        frame_load = 1'b1;
-        @(posedge clk);
-        #1;
-        frame_load = 1'b0;
-        data_in    = 16'h0000; // Đổi data_in bên ngoài để kiểm tra tính chốt của thanh ghi
-
-        for (i = 0; i < 8; i = i + 1) begin
-            fwd_step = i[2:0];
-            #1;
-            exp_pair = test_frame[15 - 2*i -: 2];
-            if (rx_pair !== exp_pair)
-                $display("[FAIL] TC-01 (16'hA55A) fwd_step=%0d: rx_pair=%b (Mong doi: %b)", i, rx_pair, exp_pair);
-            else
-                $display("[PASS] TC-01 (16'hA55A) fwd_step=%0d: rx_pair=%b", i, rx_pair);
-        end
-
-        // 4. TC-01 (Gói 2): Nạp gói 16'hF00F và quét fwd_step = 0..7
-        test_frame = 16'hF00F;
-        @(negedge clk);
-        data_in    = test_frame;
-        frame_load = 1'b1;
-        @(posedge clk);
-        #1;
-        frame_load = 1'b0;
-
-        for (i = 0; i < 8; i = i + 1) begin
-            fwd_step = i[2:0];
-            #1;
-            exp_pair = test_frame[15 - 2*i -: 2];
-            if (rx_pair !== exp_pair)
-                $display("[FAIL] TC-01 (16'hF00F) fwd_step=%0d: rx_pair=%b (Mong doi: %b)", i, rx_pair, exp_pair);
-            else
-                $display("[PASS] TC-01 (16'hF00F) fwd_step=%0d: rx_pair=%b", i, rx_pair);
-        end
-
-        // 5. Kiểm tra reset giữa chừng xóa sạch frame_reg
-        #2;
-        rst_n = 1'b0;
-        #1;
-        if (rx_pair !== 2'b00)
-            $display("[FAIL] Reset giua chung: rx_pair=%b (Mong doi: 00)", rx_pair);
-        else
-            $display("[PASS] Reset giua chung xoa frame_reg thanh cong");
-
-        #20;
-        $display("=== KET THUC MO PHONG: tb_input_buffer ===");
+            $display("=== KET QUA tb_in_buf: FAIL (%0d loi) ===", err_cnt);
         $finish;
     end
-
 endmodule

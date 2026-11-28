@@ -1,0 +1,37 @@
+# ** Note: (vsim-220) 'C:/altera_lite/25.1std/questa_fse/win64/../modelsim.ini' is used as the ini file.
+# vsim -coverage -onfinish stop -voptargs=""+acc"" work.tb_sur_mem -l sim/log_sur_mem.txt 
+# Start time: 13:54:00 on Nov 28,2026
+# ** Note: (vsim-3812) Design is being optimized...
+# ** Warning: (vopt-10908) Some optimizations are turned off because the +acc switch is in effect.
+# ** Note: (vopt-220) 'C:/altera_lite/25.1std/questa_fse/win64/../modelsim.ini' is used as the ini file.
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=1.
+# Loading work.tb_sur_mem(fast)
+# Loading work.sur_mem(fast)
+add wave -r /*
+configure wave -signalnamewidth 1
+run -all
+# === BAT DAU MO PHONG: tb_sur_mem (VT-023) ===
+# [PASS] Reset (rstn=0): Khoa ghi du lieu thanh cong
+# [INFO] Da ghi dong bo 8 hang (ctrl_fwd_cnt = 0..7)
+# [PASS] Doc to hop hang 7 dung: trb_word=1
+# [PASS] Doc to hop hang 6 dung: trb_word=0
+# [PASS] Doc to hop hang 5 dung: trb_word=f
+# [PASS] Doc to hop hang 4 dung: trb_word=e
+# [PASS] Doc to hop hang 3 dung: trb_word=d
+# [PASS] Doc to hop hang 2 dung: trb_word=c
+# [PASS] Doc to hop hang 1 dung: trb_word=b
+# [PASS] Doc to hop hang 0 dung: trb_word=a
+# === KET QUA tb_sur_mem: PASS 100% (0 loi) ===
+# ** Note: $finish    : testbench/tb_sur_mem.v(88)
+#    Time: 121 ns  Iteration: 0  Instance: /tb_sur_mem
+# Break in Module tb_sur_mem at testbench/tb_sur_mem.v line 88
+wave zoom full
+# {0 ps} {127050 ps}
+coverage save sim/cov_sur_mem.ucdb
+# Paste insertion failed: quit: ** UI-Msg (Warning): (vish-4014) No objects found matching 'quit'.
+# Paste insertion failed: -sim: Unrecognized option: "-sim" ignored.
+# Missing signal name or pattern.
+quit -sim
+# End time: 13:56:30 on Nov 28,2026, Elapsed time: 0:02:30
+# Errors: 0, Warnings: 1
+vsim -coverage -onfinish stop -voptargs="+acc" work.tb_trb -l sim/log_trb.txt
