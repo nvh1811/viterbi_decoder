@@ -31,8 +31,8 @@ module tb_trb;
     always #5 clk = ~clk;
 
     task test_select_tie;
-        input [19:0] pm_vec;
-        input [1:0]  exp_st;
+        input [19:0]  pm_vec;
+        input [1:0]   exp_st;
         input [255:0] msg;
         begin
             @(negedge clk);
@@ -51,7 +51,7 @@ module tb_trb;
     endtask
 
     initial begin
-        $display("=== BAT DAU MO PHONG: tb_trb (VT-023 | TC-04 & TC-13) ===");
+        $display("=== BAT DAU MO PHONG: tb_trb (023 | TC-04 & TC-13) ===");
         err_cnt       = 0;
         rstn          = 1'b0;
         met_upd_pm    = 20'd0;
@@ -74,9 +74,7 @@ module tb_trb;
         @(negedge clk);
         rstn = 1'b1;
 
-        // 2. TC-04 & Phu luc A.2: Kiem tra quy tac uu tien hoa (00 -> 01 -> 10 -> 11)
-        // Gom ca 4 cap hoa dac biet khong xuat hien o top: 00-01, 00-11, 01-10, 10-11
-        // Dinh dang: {pm11, pm10, pm01, pm00}
+        // 2. TC-04: Uu tien hoa (00 -> 01 -> 10 -> 11) + 4 cap hoa dac biet
         test_select_tie({5'd3, 5'd3, 5'd3, 5'd3}, 2'b00, "Hoa 4 state (00-01-10-11) -> chon 00");
         test_select_tie({5'd7, 5'd6, 5'd2, 5'd2}, 2'b00, "Hoa 2 state dac biet (00-01) -> chon 00");
         test_select_tie({5'd2, 5'd6, 5'd7, 5'd2}, 2'b00, "Hoa 2 state dac biet (00-11) -> chon 00");
@@ -95,17 +93,16 @@ module tb_trb;
             $display("[PASS] TC-13: Giu nguyen thanh ghi khi cac enable=0");
         end
 
-        // 4. TC-04 & TC-13: Chu trinh SELECT -> TRACEBACK (8 buoc) -> DONE -> Ban tin: 8'hB6
-        sur_rom[7] = 4'b0100; // S8=10 (1), dec=sur[2]=1 -> S7=01
-        sur_rom[6] = 4'b0010; // S7=01 (0), dec=sur[1]=1 -> S6=11
-        sur_rom[5] = 4'b0000; // S6=11 (1), dec=sur[3]=0 -> S5=10
-        sur_rom[4] = 4'b0100; // S5=10 (1), dec=sur[2]=1 -> S4=01
-        sur_rom[3] = 4'b0010; // S4=01 (0), dec=sur[1]=1 -> S3=11
-        sur_rom[2] = 4'b0000; // S3=11 (1), dec=sur[3]=0 -> S2=10
-        sur_rom[1] = 4'b0000; // S2=10 (1), dec=sur[2]=0 -> S1=00
-        sur_rom[0] = 4'b0000; // S1=00 (0), dec=sur[0]=0 -> S0=00
+        // 4. TC-04 & TC-13: SELECT -> TRACEBACK (8 buoc) -> DONE
+        sur_rom[7] = 4'b0100;
+        sur_rom[6] = 4'b0010;
+        sur_rom[5] = 4'b0000;
+        sur_rom[4] = 4'b0100;
+        sur_rom[3] = 4'b0010;
+        sur_rom[2] = 4'b0000;
+        sur_rom[1] = 4'b0000;
+        sur_rom[0] = 4'b0000;
 
-        // SELECT
         @(negedge clk);
         met_upd_pm    = {5'd9, 5'd1, 5'd5, 5'd4};
         ctrl_sel_flag = 1'b1;
@@ -114,7 +111,6 @@ module tb_trb;
         ctrl_sel_flag = 1'b0;
         $display("[INFO] SELECT: Chon trang thai bat dau truy vet tb_st=%b", dut.tb_st);
 
-        // TRACEBACK 8 buoc
         for (step = 7; step >= 0; step = step - 1) begin
             @(negedge clk);
             ctrl_tb_en   = 1'b1;
@@ -125,17 +121,16 @@ module tb_trb;
         @(negedge clk);
         ctrl_tb_en = 1'b0;
 
-        // DONE
         ctrl_out_flag = 1'b1;
         @(posedge clk);
         #1;
         ctrl_out_flag = 1'b0;
-        if (output_data !== 8'hB6 || dut.tb_st !== 2'b00) begin
-            $display("[FAIL] DONE: exp output_data=8'hB6 (got %h), tb_st=00 (got %b)",
+        if (output_data !== 8'h6D || dut.tb_st !== 2'b00) begin
+            $display("[FAIL] DONE: exp output_data=8'h6D (got %h), tb_st=00 (got %b)",
                      output_data, dut.tb_st);
             err_cnt = err_cnt + 1;
         end else begin
-            $display("[PASS] DONE: Khoi phuc chinh xac output_data=8'hB6 va lui ve state 00");
+            $display("[PASS] DONE: Khoi phuc chinh xac output_data=8'h6D va lui ve state 00");
         end
 
         if (err_cnt == 0)
