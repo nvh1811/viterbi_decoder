@@ -58,19 +58,15 @@ module tb_bmc;
 
             #1;
             if (acs_bm00 !== expected_bm00) begin
-                $display("[ERROR] BMC rx=%b bm00: expected=%d actual=%d", in_buf_rx, expected_bm00, acs_bm00);
                 error_count = error_count + 1;
             end
             if (acs_bm01 !== expected_bm01) begin
-                $display("[ERROR] BMC rx=%b bm01: expected=%d actual=%d", in_buf_rx, expected_bm01, acs_bm01);
                 error_count = error_count + 1;
             end
             if (acs_bm10 !== expected_bm10) begin
-                $display("[ERROR] BMC rx=%b bm10: expected=%d actual=%d", in_buf_rx, expected_bm10, acs_bm10);
                 error_count = error_count + 1;
             end
             if (acs_bm11 !== expected_bm11) begin
-                $display("[ERROR] BMC rx=%b bm11: expected=%d actual=%d", in_buf_rx, expected_bm11, acs_bm11);
                 error_count = error_count + 1;
             end
         end
