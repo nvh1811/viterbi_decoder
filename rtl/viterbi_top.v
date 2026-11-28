@@ -6,76 +6,76 @@ module viterbi_top (
     output wire [7:0]  output_data,
     output wire        output_done
 );
-    wire        frame_load;
-    wire        frame_init;
-    wire        metric_en;
-    wire        survivor_we;
-    wire        select_en;
-    wire        tb_en;
-    wire        out_en;
-    wire [2:0]  fwd_step;
-    wire [2:0]  tb_step;
+    wire        in_buf_load_flag;
+    wire        met_upd_init_flag;
+    wire        met_upd_en;
+    wire        sur_mem_we;
+    wire        trb_sel_flag;
+    wire        trb_tb_en;
+    wire        trb_out_flag;
+    wire [2:0]  fwd_cnt;
+    wire [2:0]  tb_cnt;
 
-    wire [1:0]  rx_pair;
-    wire [19:0] pm_bus;
-    wire [3:0]  decision_vec;
-    wire [3:0]  survivor_word;
+    wire [1:0]  in_buf_rx;
+    wire [19:0] trb_pm;
+    wire [3:0]  sur_mem_dec;
+    wire [3:0]  trb_word;
 
-    controller u_controller (
-        .clk            (clk),
-        .rstn           (rstn),
-        .viterbi_enable (viterbi_enable),
-        .frame_load     (frame_load),
-        .frame_init     (frame_init),
-        .metric_en      (metric_en),
-        .survivor_we    (survivor_we),
-        .select_en      (select_en),
-        .tb_en          (tb_en),
-        .out_en         (out_en),
-        .fwd_step       (fwd_step),
-        .tb_step        (tb_step),
-        .output_done    (output_done)
+    ctrl u_ctrl (
+        .clk                    (clk),
+        .rstn                   (rstn),
+        .viterbi_enable         (viterbi_enable),
+        .in_buf_load_flag       (in_buf_load_flag),
+        .met_upd_init_flag      (met_upd_init_flag),
+        .met_upd_en             (met_upd_en),
+        .sur_mem_we             (sur_mem_we),
+        .trb_sel_flag           (trb_sel_flag),
+        .trb_tb_en              (trb_tb_en),
+        .trb_out_flag           (trb_out_flag),
+        .in_buf_sur_mem_fwd_cnt (fwd_cnt),
+        .sur_mem_trb_tb_cnt     (tb_cnt),
+        .output_done            (output_done)
     );
 
-    input_buffer u_input_buffer (
+    in_buf u_in_buf (
         .clk            (clk),
         .rstn           (rstn),
-        .frame_load     (frame_load),
+        .ctrl_load_flag (in_buf_load_flag),
         .input_data     (input_data),
-        .fwd_step       (fwd_step),
-        .rx_pair        (rx_pair)
+        .ctrl_fwd_cnt   (fwd_cnt),
+        .met_upd_rx     (in_buf_rx)
     );
 
-    metric_update u_metric_update (
+    met_upd u_met_upd (
         .clk            (clk),
         .rstn           (rstn),
-        .frame_init     (frame_init),
-        .metric_en      (metric_en),
-        .rx_pair        (rx_pair),
-        .pm_bus         (pm_bus),
-        .decision_vec   (decision_vec)
+        .ctrl_init_flag (met_upd_init_flag),
+        .ctrl_en        (met_upd_en),
+        .in_buf_rx      (in_buf_rx),
+        .trb_pm         (trb_pm),
+        .sur_mem_dec    (sur_mem_dec)
     );
 
-    survivor_mem u_survivor_mem (
-        .clk            (clk),
-        .rstn           (rstn),
-        .survivor_we    (survivor_we),
-        .fwd_step       (fwd_step),
-        .decision_vec   (decision_vec),
-        .tb_step        (tb_step),
-        .survivor_word  (survivor_word)
+    sur_mem u_sur_mem (
+        .clk          (clk),
+        .rstn         (rstn),
+        .ctrl_we      (sur_mem_we),
+        .ctrl_fwd_cnt (fwd_cnt),
+        .met_upd_dec  (sur_mem_dec),
+        .ctrl_tb_cnt  (tb_cnt),
+        .trb_word     (trb_word)
     );
 
-    traceback u_traceback (
-        .clk            (clk),
-        .rstn           (rstn),
-        .pm_bus         (pm_bus),
-        .survivor_word  (survivor_word),
-        .tb_step        (tb_step),
-        .select_en      (select_en),
-        .tb_en          (tb_en),
-        .out_en         (out_en),
-        .output_data    (output_data)
+    trb u_trb (
+        .clk           (clk),
+        .rstn          (rstn),
+        .met_upd_pm    (trb_pm),
+        .sur_mem_word  (trb_word),
+        .ctrl_tb_cnt   (tb_cnt),
+        .ctrl_sel_flag (trb_sel_flag),
+        .ctrl_tb_en    (trb_tb_en),
+        .ctrl_out_flag (trb_out_flag),
+        .output_data   (output_data)
     );
 
 endmodule
