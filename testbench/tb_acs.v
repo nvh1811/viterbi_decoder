@@ -1,88 +1,81 @@
-// =============================================================================
-// File        : tb_acs.v
-// Module      : tb_acs
-// Project     : Bộ giải mã Viterbi (K=3, R=1/2) — Nhóm 9 VLSI
-// Task        : VT-020b (Phụ trách: Vũ Nguyễn Đăng Nhật)
-// Tham chiếu  : Mục 9.3.1 (Bảng 20), N05, TC-03 — BTL_Nhóm 9_VLSI
-// =============================================================================
-
 `timescale 1ns / 1ps
 
 module tb_acs;
 
-    // Tín hiệu kết nối DUT
-    reg  [4:0] pm_a;
-    reg  [4:0] pm_b;
-    reg  [1:0] bm_a;
-    reg  [1:0] bm_b;
-    wire [4:0] next_pm;
-    wire       decision;
+    reg [4:0] met_upd_pm_a;
+    reg [4:0] met_upd_pm_b;
+    reg [1:0] bmc_bm_a;
+    reg [1:0] bmc_bm_b;
+    wire [4:0] met_upd_nxt_pm;
+    wire met_upd_dec;
 
-    // Khởi tạo DUT (module acs)
+    integer pa;
+    integer pb;
+    integer ba;
+    integer bb;
+    integer sum_a;
+    integer sum_b;
+    integer expected_pm;
+    integer expected_dec;
+    integer error_count;
+
     acs dut (
-        .pm_a     (pm_a),
-        .pm_b     (pm_b),
-        .bma     (bm_a),
-        .bmb     (bm_b),
-        .next_pm  (next_pm),
-        .decision (decision)
+        .met_upd_pm_a(met_upd_pm_a),
+        .met_upd_pm_b(met_upd_pm_b),
+        .bmc_bm_a(bmc_bm_a),
+        .bmc_bm_b(bmc_bm_b),
+        .met_upd_nxt_pm(met_upd_nxt_pm),
+        .met_upd_dec(met_upd_dec)
     );
 
-    //Khởi tạo các biến
-    integer pa, pb, ba, bb;
-    integer tonga, tongb;
-    reg [4:0] pm;
-    reg dec;
-
-    integer error_count;
-    
     initial begin
         error_count = 0;
-        
-        for (pa = 30; pa <=31; pa = pa + 1) begin
-            for (pb = 30; pb <=31; pb = pb + 1) begin
-                for (ba = 0; ba <=2; ba = ba + 1) begin
-                    for (bb = 0; bb <=2; bb = bb + 1) begin
 
-                        pm_a = pa;
-                        pm_b = pb;
-                        bm_a = ba;
-                        bm_b = bb;
+        for (pa = 0; pa <= 31; pa = pa + 1) begin
+            for (pb = 0; pb <= 31; pb = pb + 1) begin
+                for (ba = 0; ba <= 2; ba = ba + 1) begin
+                    for (bb = 0; bb <= 2; bb = bb + 1) begin
+                        met_upd_pm_a = pa;
+                        met_upd_pm_b = pb;
+                        bmc_bm_a = ba;
+                        bmc_bm_b = bb;
                         #1;
 
-                        tonga = pa + ba;
-                        tongb = pb + bb;
-                    
-                        if (tonga > 31) begin
-                            tonga = 31;
+                        sum_a = pa + ba;
+                        sum_b = pb + bb;
+
+                        if (sum_a >= 31)
+                            sum_a = 31;
+                        if (sum_b >= 31)
+                            sum_b = 31;
+
+                        if (sum_a > sum_b) begin
+                            expected_pm = sum_b;
+                            expected_dec = 1;
                         end
-                        if (tongb > 31) begin
-                            tongb = 31;
+                        else begin
+                            expected_pm = sum_a;
+                            expected_dec = 0;
                         end
 
-                        if (tonga > tongb) begin
-                            pm = tongb;
-                            dec = 1'b1;
+                        if (met_upd_nxt_pm !== expected_pm[4:0]) begin
+                            $display("[ERROR] ACS PMA=%0d PMB=%0d BMA=%0d BMB=%0d next_pm: expected=%0d actual=%0d",
+                                     pa, pb, ba, bb, expected_pm, met_upd_nxt_pm);
+                            error_count = error_count + 1;
                         end
-                        if (tonga <= tongb) begin
-                            pm = tonga;
-                            dec = 1'b0;
-                        end
-
-                        if ((next_pm !== pm) || (decision !== dec)) begin
+                        if (met_upd_dec !== expected_dec[0]) begin
+                            $display("[ERROR] ACS PMA=%0d PMB=%0d BMA=%0d BMB=%0d decision: expected=%0d actual=%0d",
+                                     pa, pb, ba, bb, expected_dec, met_upd_dec);
                             error_count = error_count + 1;
                         end
                     end
                 end
             end
         end
-        // TODO (VT-020b - N05, TC-03):
-        // - Kiểm tra bão hòa tại 31 khi pm_a/pm_b = 30, 31 và bm = 0, 1, 2
-        // - Kiểm tra chọn nhánh nhỏ hơn và ưu tiên nhánh A (decision = 0) khi hòa
-        if (error_count > 0) begin
+
+        if (error_count > 0)
             $display("TONG SO LOI tb_acs = %0d", error_count);
-        end
-        #20;
+
         $finish;
     end
 
