@@ -1,97 +1,104 @@
-// =============================================================================
-// File        : tb_viterbi_top.v
-// Module      : tb_viterbi_top (Top-level Testbench)
-// Project     : Bộ giải mã Viterbi (K=3, R=1/2) — Nhóm 9 VLSI
-// Task        : VT-020d (Phụ trách: Vũ Nguyễn Đăng Nhật)
-// Tham chiếu  : Verification Plan (TC-05 .. TC-12) — BTL_Nhóm 9_VLSI
-// Lưu ý       :
-//   - File ../data_file/input.txt chứa 1024 dòng nhị phân 16-bit (đưa vào data_in)
-//   - File ../data_file/output.txt chứa 1024 dòng nhị phân 8-bit (đối chiếu data_out)
-//   - Sử dụng $readmemb vì dữ liệu trong file ở dạng nhị phân (0/1).
-// =============================================================================
-
 `timescale 1ns / 1ps
 
 module tb_viterbi_top;
 
-    // Tham số kiểm thử
     localparam NUM_VECTORS = 1025;
-    localparam CLK_PERIOD  = 5.0; // 200 MHz (5ns)
+    localparam CLK_PERIOD = 5.0;
 
-    // Tín hiệu kết nối DUT
-    reg         clk;
-    reg         rst_n;
-    reg         start;
-    reg  [15:0] data_in;
-    wire [7:0]  data_out;
-    wire        done;
+    reg clk;
+    reg rstn;
+    reg viterbi_enable;
+    reg [15:0] input_data;
+    wire [7:0] output_data;
+    wire output_done;
 
-    // Bộ nhớ lưu Golden Vectors từ thư mục data_file/
-    reg [15:0] input_vectors    [0:NUM_VECTORS-1];
-    reg [7:0]  expected_outputs [0:NUM_VECTORS-1];
+    reg [15:0] input_vectors [0:NUM_VECTORS-1];
+    reg [7:0] expected_outputs [0:NUM_VECTORS-1];
 
     integer i;
+    integer j;
     integer error_count;
-    // Khởi tạo DUT (Top-level module)
+    integer valid_vectors;
+    integer wait_count;
+
     viterbi_top dut (
-        .clk      (clk),
-        .rst_n    (rst_n),
-        .start    (start),
-        .data_in  (data_in),
-        .data_out (data_out),
-        .done     (done)
+        .clk(clk),
+        .rstn(rstn),
+        .viterbi_enable(viterbi_enable),
+        .input_data(input_data),
+        .output_data(output_data),
+        .output_done(output_done)
     );
 
-    // Tạo xung nhịp clock
     initial clk = 1'b0;
     always #(CLK_PERIOD / 2.0) clk = ~clk;
 
-    // Nạp dữ liệu kiểm thử chuẩn (TC-12)
     initial begin
-        $readmemb("../data_file/input.txt",  input_vectors);
+        for (i = 0; i < NUM_VECTORS; i = i + 1) begin
+            input_vectors[i] = 16'hxxxx;
+            expected_outputs[i] = 8'hxx;
+        end
+
+        $readmemb("../data_file/input.txt", input_vectors);
         $readmemb("../data_file/output.txt", expected_outputs);
+
+        #1;
+        valid_vectors = 0;
+        for (i = 0; i < NUM_VECTORS; i = i + 1) begin
+            if ((^input_vectors[i] !== 1'bx) && (^expected_outputs[i] !== 1'bx))
+                valid_vectors = valid_vectors + 1;
+        end
+
+        if (valid_vectors != NUM_VECTORS) begin
+            $display("[ERROR] So dong du lieu hop le khong dung: expected=%0d actual=%0d",
+                     NUM_VECTORS, valid_vectors);
+            $display("Kiem tra duong dan input.txt va output.txt trong thu muc sim.");
+            $finish;
+        end
     end
 
-    // Kịch bản kiểm thử chính
     initial begin
-        rst_n   = 1'b0;
-        start   = 1'b0;
-        data_in = 16'h0000;
-
         error_count = 0;
-        // TODO (VT-020d - TC-05 .. TC-12):
-        // - Giải phóng reset, đưa từng khung input_vectors[i] vào data_in cùng xung start = 1 (1 clock)
-        // - Chờ đúng 18 chu kỳ clock (done == 1), đối chiếu data_out với expected_outputs[i]
-        // - Thống kê số lượng PASS / FAIL trên toàn bộ 1024 vector.
-        @(negedge clk);
-        @(negedge clk);
+        rstn = 1'b0;
+        viterbi_enable = 1'b0;
+        input_data = 16'h0000;
 
-        rst_n = 1'b1;
+        repeat (2) @(negedge clk);
+        rstn = 1'b1;
 
-        @(negedge clk);
-        
         for (i = 0; i < NUM_VECTORS; i = i + 1) begin
-            data_in = input_vectors[i];
-            start   = 1'b1;
             @(negedge clk);
-            start = 1'b0;
-            repeat (18) @(posedge clk);
+            input_data = input_vectors[i];
+            viterbi_enable = 1'b1;
 
             @(negedge clk);
+            viterbi_enable = 1'b0;
 
-            if (done !== 1'b1) begin
+            wait_count = 0;
+            while ((output_done !== 1'b1) && (wait_count < 20)) begin
+                @(posedge clk);
+                #1;
+                wait_count = wait_count + 1;
+            end
+
+            if (output_done !== 1'b1) begin
+                $display("[ERROR] Vector %0d input=%h: output_done khong len 1 trong 20 chu ky",
+                         i, input_vectors[i]);
                 error_count = error_count + 1;
             end
-            else begin
-                if (data_out !== expected_outputs[i]) begin
-                    error_count = error_count + 1;
-                end
+            else if (output_data !== expected_outputs[i]) begin
+                $display("[ERROR] Vector %0d input=%h expected=%h actual=%h",
+                         i, input_vectors[i], expected_outputs[i], output_data);
+                error_count = error_count + 1;
             end
+
+            @(posedge clk);
+            #1;
         end
-        if (error_count > 0) begin
-            $display("TONG SO LOI tb_metric_update = %0d", error_count);
-        end
-        #100;
+
+        if (error_count > 0)
+            $display("TONG SO LOI tb_viterbi_top = %0d", error_count);
+
         $finish;
     end
 
