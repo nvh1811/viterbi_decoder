@@ -59,13 +59,9 @@ module tb_acs;
                         end
 
                         if (met_upd_nxt_pm !== expected_pm[4:0]) begin
-                            $display("[ERROR] ACS PMA=%0d PMB=%0d BMA=%0d BMB=%0d next_pm: expected=%0d actual=%0d",
-                                     pa, pb, ba, bb, expected_pm, met_upd_nxt_pm);
                             error_count = error_count + 1;
                         end
                         if (met_upd_dec !== expected_dec[0]) begin
-                            $display("[ERROR] ACS PMA=%0d PMB=%0d BMA=%0d BMB=%0d decision: expected=%0d actual=%0d",
-                                     pa, pb, ba, bb, expected_dec, met_upd_dec);
                             error_count = error_count + 1;
                         end
                     end
