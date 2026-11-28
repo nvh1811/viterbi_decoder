@@ -29,8 +29,13 @@ module tb_met_upd;
         .sur_mem_dec(sur_mem_dec)
     );
 
-    initial clk = 1'b0;
-    always #2.5 clk = ~clk;
+    initial begin
+        clk = 0;
+        forever begin
+           #2.5;
+           clk = ~clk;
+        end
+    end
 
     initial begin
         error_count = 0;
@@ -59,7 +64,6 @@ module tb_met_upd;
 
         #1;
         if (trb_pm !== {5'd31, 5'd31, 5'd31, 5'd31}) begin
-            $display("[ERROR] Reset PM: expected=31,31,31,31 actual=%h", trb_pm);
             error_count = error_count + 1;
         end
 
@@ -70,7 +74,6 @@ module tb_met_upd;
         @(posedge clk);
         #1;
         if (trb_pm !== {5'd31, 5'd31, 5'd31, 5'd0}) begin
-            $display("[ERROR] frame_init priority: expected PM00=0 others=31, actual=%h", trb_pm);
             error_count = error_count + 1;
         end
 
@@ -81,8 +84,6 @@ module tb_met_upd;
         @(posedge clk);
         #1;
         if (trb_pm !== {5'd31, 5'd31, 5'd31, 5'd0}) begin
-            $display("[ERROR] Hold PM when ctrl_en=0: expected=%h actual=%h",
-                     {5'd31, 5'd31, 5'd31, 5'd0}, trb_pm);
             error_count = error_count + 1;
         end
 
@@ -93,8 +94,6 @@ module tb_met_upd;
             @(posedge clk);
             #1;
             if (trb_pm !== {exp_pm11[i], exp_pm10[i], exp_pm01[i], exp_pm00[i]}) begin
-                $display("[ERROR] Step %0d rx=%b expected PM={%0d,%0d,%0d,%0d} actual=%h",
-                         i+1, rx_vectors[i], exp_pm11[i], exp_pm10[i], exp_pm01[i], exp_pm00[i], trb_pm);
                 error_count = error_count + 1;
             end
         end
