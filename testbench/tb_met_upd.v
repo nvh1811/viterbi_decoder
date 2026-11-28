@@ -1,137 +1,107 @@
-// =============================================================================
-// File        : tb_metric_update.v
-// Module      : tb_metric_update
-// Project     : Bộ giải mã Viterbi (K=3, R=1/2) — Nhóm 9 VLSI
-// Task        : VT-020b (Phụ trách: Vũ Nguyễn Đăng Nhật)
-// Tham chiếu  : Mục 9.3.2 (Bảng 21), N05, N06 — BTL_Nhóm 9_VLSI
-// =============================================================================
-
 `timescale 1ns / 1ps
 
 module tb_met_upd;
 
-    // Tín hiệu kết nối DUT
-    reg         clk;
-    reg         rst_n;
-    reg         frame_init;
-    reg         metric_en;
-    reg  [1:0]  rx_pair;
-    wire [19:0] pm_bus;
-    wire [3:0]  decision_vec;
+    reg clk;
+    reg rstn;
+    reg ctrl_init_flag;
+    reg ctrl_en;
+    reg [1:0] in_buf_rx;
+    wire [19:0] trb_pm;
+    wire [3:0] sur_mem_dec;
 
-    // Tách pm_bus để dễ quan sát trên waveform (Mục 6.3)
-    wire [4:0] pm00 = pm_bus[4:0];
-    wire [4:0] pm01 = pm_bus[9:5];
-    wire [4:0] pm10 = pm_bus[14:10];
-    wire [4:0] pm11 = pm_bus[19:15];
+    reg [1:0] rx_vectors [0:7];
+    reg [4:0] exp_pm00 [0:7];
+    reg [4:0] exp_pm01 [0:7];
+    reg [4:0] exp_pm10 [0:7];
+    reg [4:0] exp_pm11 [0:7];
 
+    integer i;
     integer error_count;
 
-    // Task
-    task buoc;
-        input [1:0] rx;
-        input [4:0] exp00;
-        input [4:0] exp01;
-        input [4:0] exp10;
-        input [4:0] exp11;
-
-        reg [19:0] old_pm_bus;
-
-        begin
-            @(negedge clk);
-            old_pm_bus = pm_bus;
-            rx_pair = rx;
-            metric_en = 1'b1;
-            #1;
-
-            if (pm_bus !== old_pm_bus) begin
-                error_count = error_count + 1;
-            end
-
-            @(posedge clk);
-            #1;
-
-            if (pm_bus !== {exp11, exp10, exp01, exp00}) begin
-                error_count = error_count + 1;
-            end
-            
-            metric_en = 1'b0;
-        end
-    endtask
-    
-    // Khởi tạo DUT
-    metric_update dut (
-        .clk          (clk),
-        .rst_n        (rst_n),
-        .frame_init   (frame_init),
-        .metric_en    (metric_en),
-        .rx_pair      (rx_pair),
-        .pm_bus       (pm_bus),
-        .decision_vec (decision_vec)
+    met_upd dut (
+        .clk(clk),
+        .rstn(rstn),
+        .ctrl_init_flag(ctrl_init_flag),
+        .ctrl_en(ctrl_en),
+        .in_buf_rx(in_buf_rx),
+        .trb_pm(trb_pm),
+        .sur_mem_dec(sur_mem_dec)
     );
 
-    // Tạo xung nhịp clock (chu kỳ 5ns)
     initial clk = 1'b0;
     always #2.5 clk = ~clk;
 
     initial begin
-        rst_n      = 1'b0;
-        frame_init = 1'b0;
-        metric_en  = 1'b0;
-        rx_pair    = 2'b00;
-
         error_count = 0;
+        rstn = 1'b0;
+        ctrl_init_flag = 1'b0;
+        ctrl_en = 1'b0;
+        in_buf_rx = 2'b00;
 
-        #1
-        // TODO (VT-020b - N06):
-        // - Kiểm tra reset đặt 4 PM = (31, 31, 31, 31)
-        if (pm_bus !== {5'd31, 5'd31, 5'd31, 5'd31}) begin
+        rx_vectors[0] = 2'b00;
+        rx_vectors[1] = 2'b11;
+        rx_vectors[2] = 2'b11;
+        rx_vectors[3] = 2'b01;
+        rx_vectors[4] = 2'b10;
+        rx_vectors[5] = 2'b11;
+        rx_vectors[6] = 2'b10;
+        rx_vectors[7] = 2'b11;
+
+        exp_pm00[0]=0; exp_pm01[0]=31; exp_pm10[0]=2; exp_pm11[0]=31;
+        exp_pm00[1]=2; exp_pm01[1]=3;  exp_pm10[1]=0; exp_pm11[1]=3;
+        exp_pm00[2]=3; exp_pm01[2]=1;  exp_pm10[2]=2; exp_pm11[2]=1;
+        exp_pm00[3]=2; exp_pm01[3]=1;  exp_pm10[3]=2; exp_pm11[3]=2;
+        exp_pm00[4]=2; exp_pm01[4]=2;  exp_pm10[4]=2; exp_pm11[4]=2;
+        exp_pm00[5]=2; exp_pm01[5]=3;  exp_pm10[5]=2; exp_pm11[5]=3;
+        exp_pm00[6]=3; exp_pm01[6]=2;  exp_pm10[6]=3; exp_pm11[6]=3;
+        exp_pm00[7]=2; exp_pm01[7]=4;  exp_pm10[7]=3; exp_pm11[7]=4;
+
+        #1;
+        if (trb_pm !== {5'd31, 5'd31, 5'd31, 5'd31}) begin
+            $display("[ERROR] Reset PM: expected=31,31,31,31 actual=%h", trb_pm);
             error_count = error_count + 1;
         end
-                
-        // - Kiểm tra frame_init đặt 4 PM = (0, 31, 31, 31)
+
         @(negedge clk);
-        rst_n      = 1'b1;
-        frame_init = 1'b1;
-    
+        rstn = 1'b1;
+        ctrl_init_flag = 1'b1;
+        ctrl_en = 1'b1;
         @(posedge clk);
         #1;
-        
-        if (pm_bus !== {5'd31, 5'd31, 5'd31, 5'd0}) begin
+        if (trb_pm !== {5'd31, 5'd31, 5'd31, 5'd0}) begin
+            $display("[ERROR] frame_init priority: expected PM00=0 others=31, actual=%h", trb_pm);
             error_count = error_count + 1;
         end
-        
-        frame_init = 1'b0;
-        
-        // - Kiểm tra 8 bước cập nhật PM theo ví dụ Mục 2.5 trong Docs
-        // Bước 1
-        buoc(2'b00, 5'd0, 5'd31, 5'd2, 5'd31);
 
-        // Bước 2
-        buoc(2'b11, 5'd2, 5'd3, 5'd0, 5'd3);
-
-        // Bước 3
-        buoc(2'b11, 5'd3, 5'd1, 5'd2, 5'd1);
-
-        // Bước 4
-        buoc(2'b01, 5'd2, 5'd1, 5'd4, 5'd1);
-
-        // Bước 5
-        buoc(2'b10, 5'd2, 5'd3, 5'd2, 5'd3);
-
-        // Bước 6
-        buoc(2'b11, 5'd4, 5'd3, 5'd2, 5'd3);
-        
-        // Bước 7
-        buoc(2'b10, 5'd4, 5'd2, 5'd4, 5'd4);
-        
-        // Bước 8
-        buoc(2'b10, 5'd2, 5'd5, 5'd4, 5'd5);
-
-        if (error_count > 0) begin
-            $display("TONG SO LOI tb_metric_update = %0d", error_count);
+        @(negedge clk);
+        ctrl_init_flag = 1'b0;
+        ctrl_en = 1'b0;
+        in_buf_rx = 2'b11;
+        @(posedge clk);
+        #1;
+        if (trb_pm !== {5'd31, 5'd31, 5'd31, 5'd0}) begin
+            $display("[ERROR] Hold PM when ctrl_en=0: expected=%h actual=%h",
+                     {5'd31, 5'd31, 5'd31, 5'd0}, trb_pm);
+            error_count = error_count + 1;
         end
-        #50;
+
+        for (i = 0; i < 8; i = i + 1) begin
+            @(negedge clk);
+            in_buf_rx = rx_vectors[i];
+            ctrl_en = 1'b1;
+            @(posedge clk);
+            #1;
+            if (trb_pm !== {exp_pm11[i], exp_pm10[i], exp_pm01[i], exp_pm00[i]}) begin
+                $display("[ERROR] Step %0d rx=%b expected PM={%0d,%0d,%0d,%0d} actual=%h",
+                         i+1, rx_vectors[i], exp_pm11[i], exp_pm10[i], exp_pm01[i], exp_pm00[i], trb_pm);
+                error_count = error_count + 1;
+            end
+        end
+
+        if (error_count > 0)
+            $display("TONG SO LOI tb_met_upd = %0d", error_count);
+
         $finish;
     end
 
