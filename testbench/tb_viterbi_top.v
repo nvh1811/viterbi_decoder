@@ -30,8 +30,13 @@ module tb_viterbi_top;
         .output_done(output_done)
     );
 
-    initial clk = 1'b0;
-    always #(CLK_PERIOD / 2.0) clk = ~clk;
+    initial begin
+        clk = 0;
+        forever begin
+            @(negedge clk);
+            clk = ~clk;
+        end
+    end
 
     initial begin
         for (i = 0; i < NUM_VECTORS; i = i + 1) begin
@@ -82,13 +87,9 @@ module tb_viterbi_top;
             end
 
             if (output_done !== 1'b1) begin
-                $display("[ERROR] Vector %0d input=%h: output_done khong len 1 trong 20 chu ky",
-                         i, input_vectors[i]);
                 error_count = error_count + 1;
             end
             else if (output_data !== expected_outputs[i]) begin
-                $display("[ERROR] Vector %0d input=%h expected=%h actual=%h",
-                         i, input_vectors[i], expected_outputs[i], output_data);
                 error_count = error_count + 1;
             end
 
