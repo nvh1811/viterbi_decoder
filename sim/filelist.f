@@ -5,19 +5,19 @@
 // =============================================================================
 
 // --- 1. Các module RTL ---
-../rtl/input_buffer.v
-../rtl/metric_update.v
-../rtl/survivor_mem.v
-../rtl/traceback.v
-../rtl/controller.v
+../rtl/in_buf.v
+../rtl/met_upd.v
+../rtl/sur_mem.v
+../rtl/trb.v
+../rtl/ctrl.v
 ../rtl/viterbi_top.v
 
 // --- 2. Các Unit Testbench  ---
-../testbench/tb_input_buffer.v
-../testbench/tb_controller.v
-../testbench/tb_survivor_mem.v
-../testbench/tb_traceback.v
+../testbench/tb_in_buf.v
+../testbench/tb_ctrl.v
+../testbench/tb_sur_mem.v
+../testbench/tb_trb.v
 ../testbench/tb_bmc.v
 ../testbench/tb_acs.v
-../testbench/tb_metric_update.v
+../testbench/tb_met_upd.v
 ../testbench/tb_viterbi_top.v
