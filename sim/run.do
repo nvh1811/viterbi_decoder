@@ -10,11 +10,11 @@
 #        vsim -c -do "do run.do; quit -f"
 # =============================================================================
 
-# 1. Nhận tên module testbench từ tham số (mặc định tb_viterbi_decoder)
+# 1. Nhận tên module testbench từ tham số (mặc định tb_viterbi_top)
 if {$argc >= 1} {
     set TB_TOP $1
 } else {
-    set TB_TOP "tb_viterbi_decoder"
+    set TB_TOP "tb_viterbi_top"
 }
 
 # 2. Xóa và tạo lại thư viện work

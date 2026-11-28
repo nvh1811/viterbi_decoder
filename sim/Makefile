@@ -14,7 +14,7 @@ FILELIST := filelist.f
 TB       ?= tb_viterbi_top
 
 # Danh sách tất cả các Unit Testbench (Tuyển & Nhật)
-UNIT_TESTS := tb_input_buffer tb_controller tb_bmc tb_acs tb_metric_update tb_survivor_mem tb_traceback
+UNIT_TESTS := tb_in_buf tb_ctrl tb_bmc tb_acs tb_met_upd tb_sur_mem tb_trb
 
 .PHONY: all sim gui $(UNIT_TESTS) all_unit clean
 
