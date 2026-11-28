@@ -8,7 +8,7 @@
 
 `timescale 1ns / 1ps
 
-module tb_input_buffer;
+module tb_in_buf;
 
     // Tín hiệu kết nối DUT
     reg         clk;

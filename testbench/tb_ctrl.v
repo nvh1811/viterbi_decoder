@@ -8,7 +8,7 @@
 
 `timescale 1ns / 1ps
 
-module tb_controller;
+module tb_ctrl;
 
     // Tín hiệu kết nối DUT
     reg        clk;

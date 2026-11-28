@@ -8,7 +8,7 @@
 
 `timescale 1ns / 1ps
 
-module tb_survivor_mem;
+module tb_sur_mem;
 
     // Tín hiệu kết nối DUT
     reg        clk;

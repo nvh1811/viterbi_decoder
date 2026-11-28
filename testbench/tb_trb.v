@@ -8,7 +8,7 @@
 
 `timescale 1ns / 1ps
 
-module tb_traceback;
+module tb_trb;
 
     // Tín hiệu kết nối DUT
     reg         clk;

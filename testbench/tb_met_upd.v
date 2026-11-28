@@ -8,7 +8,7 @@
 
 `timescale 1ns / 1ps
 
-module tb_metric_update;
+module tb_met_upd;
 
     // Tín hiệu kết nối DUT
     reg         clk;
